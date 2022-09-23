@@ -9,29 +9,47 @@
 Odrive cOdrive;
 Buttons cButtons;
 ConfigData cConfigData;
-Trottle cTrottle;
-Display cDisplay;
+Trottle cTrottle(&cConfigData);
+Display cDisplay(&cOdrive,&cButtons);
 
 
 
 
 void setup() {
+  //For Debbuging
+  Serial.begin(9600);
+  while (!Serial); //Whait while Serial is connected in VSC
+
+
+
+
   cOdrive.Init();
   cButtons.Init();
-  
-  
-  //Init Trottle with parameters
-  ConfigData::TrottleParam sTrottleParam = cConfigData.GetTrottleParam();
-  cTrottle.Init(sTrottleParam.MinVal,sTrottleParam.Neutral,sTrottleParam.DeadZone,sTrottleParam.MaxVal);
   cDisplay.Init();
 
 }
 
 void loop() {
-  static unsigned long milisecond = 0;
-  if(milisecond < (millis()+10)){
-    milisecond = millis();
+  static unsigned long oldmilisecond100Hz = 0;
+  static unsigned long oldmilisecond10Hz = 0;
+  static unsigned long oldmilisecond1Hz = 0;
+  unsigned long newmillisecond = millis();
+  if((oldmilisecond100Hz+10) < newmillisecond){ //100Hz
+    oldmilisecond100Hz = newmillisecond;
     cButtons.ReadCyclic();
+  } 
+
+  if((oldmilisecond10Hz+100) < newmillisecond){ //10Hz
+    oldmilisecond10Hz = newmillisecond;
+    
+    
     cTrottle.Update();
   } 
+
+  if((oldmilisecond1Hz+1000) < newmillisecond){ //1Hz
+    oldmilisecond1Hz = newmillisecond;
+    
+    Serial.print("Main HeartBeat");
+  }  
+  
 }
