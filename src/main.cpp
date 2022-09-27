@@ -5,10 +5,12 @@
 #include "Button/Buttons.h"
 #include "ConfigData/ConfigData.h"
 #include "Trottle/Trottle.h"
+#include "OnboardLedRGB/OnBoardLed.h"
 
 Odrive cOdrive;
 Buttons cButtons;
 ConfigData cConfigData;
+OnBoardLed cOnBoardLed;
 Trottle cTrottle(&cConfigData);
 Display cDisplay(&cOdrive,&cButtons);
 
@@ -26,6 +28,9 @@ void setup() {
   cOdrive.Init();
   cButtons.Init();
   cDisplay.Init();
+  cTrottle.Init();
+  cOnBoardLed.SetColor(0);
+  cOnBoardLed.SetBrightness(10);
 
 }
 
@@ -48,8 +53,8 @@ void loop() {
 
   if((oldmilisecond1Hz+1000) < newmillisecond){ //1Hz
     oldmilisecond1Hz = newmillisecond;
-    
-    Serial.print("Main HeartBeat");
+
+    cOnBoardLed.ToggleHeartBeat();
   }  
   
 }
