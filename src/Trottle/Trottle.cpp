@@ -23,13 +23,11 @@ int Trottle::Init(){
     scaleLow = 1000 /((float)StopValue -  (float)StopTollerance - (float)LowestValue);
     offsetHigh = StopValue + StopTollerance;
     scaleHigh = 1000 / ((float)HighestValue - (float)offsetHigh);
-    
-
     return 0;
 }
 
 int Trottle::Update(){
-  RawVal = analogRead(PIN_TROTTLE_SENSOR);
+  RawVal = analogRead(PIN_TROTTLE_SENSOR); 
   if(RawVal < LowestValue ){
     CurrentSpeedPromille = -1000;
   }else if(RawVal < (StopValue - StopTollerance)){ //Negative Value
@@ -46,7 +44,7 @@ int Trottle::Update(){
   }else if (CurrentSpeedPromille < -1000){
     CurrentSpeedPromille = -1000;
   }
-  Serial.println(CurrentSpeedPromille); 
+  //Serial.println(CurrentSpeedPromille);
   return CurrentSpeedPromille;
 }
 
