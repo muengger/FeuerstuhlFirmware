@@ -2,15 +2,21 @@
 #include <Arduino.h>
 #include "Button/Buttons.h"
 #include "Config/PinConfig.h"
+#include "Config/GlobalConfig.h"
 
-#define LONG_PRESS_TIME 10
+#define LONG_PRESS_TIME 100
 
 Buttons::Buttons(){
-
+  BT_Up_CNT = 0;
+  BT_Down_CNT = 0;
+  BT_Mid_CNT = 0;
+  BT_Right_CNT = 0;
+  BT_Left_CNT = 0;
+  BT_PWR_CNT = 0;
 }
 
 Buttons::~Buttons(){
-
+  vEvent.clear();
 }
 
 
@@ -27,88 +33,88 @@ int Buttons::Init(){
 }
 
 void Buttons::ReadCyclic(){
-  if(digitalRead(PIN_BUTTON_UP)){
+  if(digitalRead(PIN_BUTTON_UP) == 0){
     BT_Up_CNT++;
     if(BT_Up_CNT == LONG_PRESS_TIME){
-      vEvent.push_back(eButtonUpPressLong);
+      //Serial.print("Button Event := eButtonUpPressLong");
+      addEvent(eButtonUpPressLong);
     }
   }else{
     if((BT_Up_CNT > 1) && (BT_Up_CNT< LONG_PRESS_TIME)){
-      if(BT_Up_CNT< LONG_PRESS_TIME){
-        vEvent.push_back(eButtonUpPressShort);
-      }
-      BT_Up_CNT = 0;
+      //Serial.print("Button Event := eButtonUpPressShort");
+      addEvent(eButtonUpPressShort);
     }
+    BT_Up_CNT = 0;
   }
 
-  if(digitalRead(PIN_BUTTON_DOWN)){
+  if(digitalRead(PIN_BUTTON_DOWN)== 0){
     BT_Down_CNT++;
     if(BT_Down_CNT == LONG_PRESS_TIME){
-      vEvent.push_back(eButtonDownPressLong);
+      //Serial.print("Button Event := eButtonDownPressLong");
+      addEvent(eButtonDownPressLong);
     }
   }else{
     if((BT_Down_CNT > 1) && (BT_Down_CNT< LONG_PRESS_TIME)){
-      if(BT_Down_CNT< LONG_PRESS_TIME){
-        vEvent.push_back(eButtonDownPressShort);
-      }
-      BT_Down_CNT = 0;
+      //Serial.print("Button Event := eButtonDownPressShort");
+      addEvent(eButtonDownPressShort);
     }
+    BT_Down_CNT = 0;
   }
 
-  if(digitalRead(PIN_BUTTON_MID)){
+  if(digitalRead(PIN_BUTTON_MID)==0){
     BT_Mid_CNT++;
     if(BT_Mid_CNT == LONG_PRESS_TIME){
-      vEvent.push_back(eButtonMidPressLong);
+      //Serial.print("Button Event := eButtonMidPressLong");
+      addEvent(eButtonMidPressLong);
     }
   }else{
     if((BT_Mid_CNT > 1) && (BT_Mid_CNT< LONG_PRESS_TIME)){
-      if(BT_Mid_CNT< LONG_PRESS_TIME){
-        vEvent.push_back(eButtonMidPressShort);
-      }
-      BT_Mid_CNT = 0;
+      //Serial.print("Button Event := eButtonMidPressShort");
+      addEvent(eButtonMidPressShort);
     }
+    BT_Mid_CNT = 0;
   }
 
-  if(digitalRead(PIN_BUTTON_RIGHT)){
+  if(digitalRead(PIN_BUTTON_RIGHT)==0){
     BT_Right_CNT++;
     if(BT_Right_CNT == LONG_PRESS_TIME){
-      vEvent.push_back(eButtonRightPressLong);
+      //Serial.print("Button Event := eButtonRightPressLong");
+      addEvent(eButtonRightPressLong);
     }
   }else{
     if((BT_Right_CNT > 1) && (BT_Right_CNT< LONG_PRESS_TIME)){
-      if(BT_Right_CNT< LONG_PRESS_TIME){
-        vEvent.push_back(eButtonRightPressShort);
-      }
-      BT_Right_CNT = 0;
+      //Serial.print("Button Event := eButtonRightPressShort");
+      addEvent(eButtonRightPressShort);
     }
+    BT_Right_CNT = 0;
   }
 
-  if(digitalRead(PIN_BUTTON_LEFT)){
+  if(digitalRead(PIN_BUTTON_LEFT)==0){
     BT_Left_CNT++;
     if(BT_Left_CNT == LONG_PRESS_TIME){
-      vEvent.push_back(eButtonLeftPressLong);
+      //Serial.print("Button Event := eButtonLeftPressLong");
+      addEvent(eButtonLeftPressLong);
     }
   }else{
     if((BT_Left_CNT > 1) && (BT_Left_CNT< LONG_PRESS_TIME)){
-      if(BT_Left_CNT< LONG_PRESS_TIME){
-        vEvent.push_back(eButtonLeftPressShort);
-      }
-      BT_Left_CNT = 0;
+      //Serial.print("Button Event := eButtonLeftPressShort");
+      addEvent(eButtonLeftPressShort);
     }
+    BT_Left_CNT = 0;
   }
 
   if(digitalRead(PIN_BUTTON_ON_OFF)){
     BT_PWR_CNT++;
     if(BT_PWR_CNT == LONG_PRESS_TIME){
-      vEvent.push_back(eButtonPWRPressLong);
+      Serial.print("Button Event := eButtonPWRPressLong");
+      addEvent(eButtonPWRPressLong);
     }
   }else{
     if((BT_PWR_CNT > 1) && (BT_PWR_CNT< LONG_PRESS_TIME)){
-      if(BT_PWR_CNT< LONG_PRESS_TIME){
-        vEvent.push_back(eButtonPWRPressShort);
-      }
-      BT_PWR_CNT = 0;
+      Serial.print("Button Event := eButtonPWRPressShort");
+      addEvent(eButtonPWRPressShort);
     }
+    BT_PWR_CNT = 0;
   }
 }
 //if you get an event its deleted 
@@ -119,5 +125,13 @@ Buttons::eButtonEvent Buttons::GetEvent(){
     eButtonEvent event = vEvent[0];
     vEvent.erase (vEvent.begin());
     return event;
+  }
+}
+
+void Buttons::addEvent(enum eButtonEvent Event){
+  if(vEvent.size() < 10){
+    vEvent.push_back(Event);
+  }else{
+    Serial.print("Button Event overflow");
   }
 }

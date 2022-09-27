@@ -11,6 +11,7 @@ class ConfigData{
         int DeadZone;
     };
     struct AllParam{
+        int Initialized;
         struct TrottleParam sTrottleParam;
     };
 

@@ -1,0 +1,7 @@
+#ifndef GLOBALCONFIG_H
+#define GLOBALCONFIG_H
+
+#define FWVERSION 0x0001
+#define DEBUG
+
+#endif //GLOBALCONFIG_H

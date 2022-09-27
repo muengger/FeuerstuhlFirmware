@@ -14,7 +14,7 @@
 
 class Display{
     public:
-    Display(Odrive * _Odrive,Buttons _Buttons);
+    Display(Odrive * _Odrive,Buttons * _Buttons);
     ~Display();
 
     int Init();

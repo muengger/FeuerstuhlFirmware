@@ -11,7 +11,7 @@
 
 
 
-    Display::Display(Odrive * _Odrive,Buttons _Buttons){
+    Display::Display(Odrive * _Odrive,Buttons * _Buttons){
         pOdrive = _Odrive;
         pButtons = _Buttons;
     }
