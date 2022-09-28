@@ -28,7 +28,7 @@
         DrawMaxSpeed(test);
         DrawTrottle(pDisplay->GetTrottle()->GetTrottleVal());
         DrawBatt(test2);
-
+        DrawState(test2/30);
         test= test +0.1;
         test2++;
         if(test > 30){
@@ -89,6 +89,26 @@
         pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
         return 0;
     } 
+
+    int HomeScreen::DrawState(int State){
+        pDisplay->GetRealDisplay()->setCursor(62, 56);
+        switch(State){
+            case 0:
+                pDisplay->GetRealDisplay()->print("State:Stop");
+            break;
+            case 1:
+                pDisplay->GetRealDisplay()->print("State:Run");
+            break;
+            case 2:
+                pDisplay->GetRealDisplay()->print("State:Error");
+            break;
+            default:
+                pDisplay->GetRealDisplay()->print("State:Error");
+        }
+
+        return 0;
+    }
+
     int HomeScreen::DrawStatic(){
         pDisplay->GetRealDisplay()->drawCircle(32,32,30,SSD1306_WHITE);
         pDisplay->GetRealDisplay()->fillCircle(32,32,3,SSD1306_WHITE);
@@ -123,6 +143,9 @@
         pDisplay->GetRealDisplay()->drawRoundRect(70,10,10,44,4,SSD1306_WHITE);
 
         pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,44,4,SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->fillRect(17,55,32,10,SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->fillRect(60,55,68,10,SSD1306_WHITE);
+
 
         pDisplay->GetRealDisplay()->setTextSize(1);
         pDisplay->GetRealDisplay()->setTextColor(SSD1306_WHITE); 
@@ -134,8 +157,8 @@
         pDisplay->GetRealDisplay()->setCursor(100, 44);   
         pDisplay->GetRealDisplay()->print("Low");
         pDisplay->GetRealDisplay()->setCursor(62, 56);    
-        pDisplay->GetRealDisplay()->print("State: Stop");
-        pDisplay->GetRealDisplay()->setTextColor (SSD1306_BLACK, SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->print("State: ");
+        pDisplay->GetRealDisplay()->setTextColor(SSD1306_BLACK); 
         pDisplay->GetRealDisplay()->setCursor(18, 56);   
         pDisplay->GetRealDisplay()->print("Speed");
         return 0;

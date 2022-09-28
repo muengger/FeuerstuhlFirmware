@@ -13,6 +13,7 @@ class HomeScreen : Screen{
     int DrawStatic();
     int DrawTrottle(int  trottle);
     int DrawBatt(int  percent);
+    int DrawState(int State);
 
 };
 
