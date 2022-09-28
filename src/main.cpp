@@ -12,7 +12,7 @@ Buttons cButtons;
 ConfigData cConfigData;
 OnBoardLed cOnBoardLed;
 Trottle cTrottle(&cConfigData);
-Display cDisplay(&cOdrive,&cButtons);
+Display cDisplay(&cOdrive,&cButtons,&cTrottle);
 
 
 
@@ -20,7 +20,7 @@ Display cDisplay(&cOdrive,&cButtons);
 void setup() {
   //For Debbuging
   Serial.begin(9600);
-  while (!Serial); //Whait while Serial is connected in VSC
+  //while (!Serial); //Whait while Serial is connected in VSC
 
 
 
@@ -37,6 +37,7 @@ void setup() {
 void loop() {
   static unsigned long oldmilisecond100Hz = 0;
   static unsigned long oldmilisecond10Hz = 0;
+  static unsigned long oldmilisecond5Hz = 0;
   static unsigned long oldmilisecond1Hz = 0;
   unsigned long newmillisecond = millis();
   if((oldmilisecond100Hz+10) < newmillisecond){ //100Hz
@@ -47,9 +48,14 @@ void loop() {
   if((oldmilisecond10Hz+100) < newmillisecond){ //10Hz
     oldmilisecond10Hz = newmillisecond;
     
-    
     cTrottle.Update();
   } 
+
+  if((oldmilisecond5Hz+200) < newmillisecond){ //5Hz
+    oldmilisecond5Hz = newmillisecond;
+    
+    cDisplay.ComputeCyclic();
+  }
 
   if((oldmilisecond1Hz+1000) < newmillisecond){ //1Hz
     oldmilisecond1Hz = newmillisecond;

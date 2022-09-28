@@ -1,4 +1,4 @@
-#include "Display/Display.h"
+#include "Display.h"
 #include <Wire.h>
 #include <SPI.h>
 
@@ -9,11 +9,15 @@
 #include <gfxfont.h>
 #include <splash.h>
 
+#include "HomeScreen.h"
 
 
-    Display::Display(Odrive * _Odrive,Buttons * _Buttons){
-        pOdrive = _Odrive;
-        pButtons = _Buttons;
+
+
+    Display::Display(Odrive * _pOdrive,Buttons * _pButtons,Trottle * _pTrottle){
+        pOdrive = _pOdrive;
+        pButtons = _pButtons;
+        pTrottle = _pTrottle;
     }
     Display::~Display(){}
     int Display::Init(){
@@ -27,9 +31,18 @@
         display->cp437(true);         // Use full 256 char 'Code Page 437' font
         display->print("High\nin the Roller Chair\nTurbo Controller");
         display->display();
+
+        //Init All the screens
+        pScreenArr[0] = (Screen *) new HomeScreen(this,pButtons);
+
         return 0;
     }
-
+Adafruit_SSD1306 * Display::GetRealDisplay(){
+    return display;
+}
+Trottle * Display::GetTrottle(){
+    return pTrottle;
+}
 void Display::ComputeCyclic(){
-    
+    pScreenArr[ActualShownScreen]->CyclicProcess();
 }
