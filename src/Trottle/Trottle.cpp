@@ -28,9 +28,6 @@ int Trottle::Init(){
 
 int Trottle::Update(){
   RawVal = analogRead(PIN_TROTTLE_SENSOR);
-  Serial.print("Sensor Value :=") ;
-  Serial.println(RawVal);
-  Serial.print("\n") ;
   if(RawVal < LowestValue ){
     CurrentSpeedPromille = -1000;
   }else if(RawVal < (StopValue - StopTollerance)){ //Negative Value
@@ -47,7 +44,6 @@ int Trottle::Update(){
   }else if (CurrentSpeedPromille < -1000){
     CurrentSpeedPromille = -1000;
   }
-  //Serial.println(CurrentSpeedPromille);
   return CurrentSpeedPromille;
 }
 

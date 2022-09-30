@@ -50,9 +50,6 @@
         double winkel = (225 - (speed * 9))*PI/180;
         int x = (int)(cos(winkel) * 15);
         int y = ((int)(sin(winkel) * 15))*(-1);
-        Serial.println(winkel);
-        Serial.println(x);
-        Serial.println(y);
         pDisplay->GetRealDisplay()->drawLine(mitteX,mitteY,mitteX+x,mitteY+y,SSD1306_WHITE);
         return 0;
     }
@@ -83,9 +80,6 @@
         float min = 51;
         int Y = ((min - max)/100) * (100 - percent) + max;
         int h = min - Y;
-        Serial.println(percent);
-        Serial.println(Y);
-        Serial.println(h);
         pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
         return 0;
     } 

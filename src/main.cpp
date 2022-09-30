@@ -43,6 +43,7 @@ void loop() {
   if((oldmilisecond100Hz+10) < newmillisecond){ //100Hz
     oldmilisecond100Hz = newmillisecond;
     cButtons.ReadCyclic();
+    cOdrive.CyclicUpdate();
   } 
 
   if((oldmilisecond10Hz+100) < newmillisecond){ //10Hz
