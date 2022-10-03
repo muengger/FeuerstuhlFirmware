@@ -12,6 +12,17 @@ ConfigData::ConfigData(){
         sAllParam.sTrottleParam.MinVal = 2;         //0;
         sAllParam.sTrottleParam.DeadZone = 10;
         sAllParam.sTrottleParam.Neutral = 497;      //339;
+        sAllParam.sDriveParam.DriveState = eChild;
+        sAllParam.sDriveParam.MaxSpeedPerState[eChild]= 10;
+        sAllParam.sDriveParam.MaxSpeedPerState[eTeeny]= 20;
+        sAllParam.sDriveParam.MaxSpeedPerState[eAdult]= 30;
+        sAllParam.sDriveParam.MaxSpeedPerState[eCracy]= 40;
+        sAllParam.sDriveParam.MaxTorquePerState[eChild]= 1;
+        sAllParam.sDriveParam.MaxTorquePerState[eTeeny]= 2;
+        sAllParam.sDriveParam.MaxTorquePerState[eAdult]= 3;
+        sAllParam.sDriveParam.MaxTorquePerState[eCracy]= 4;
+        sAllParam.sMotorParam.WheelDiameter = 0.2;
+        
         DataStorage.write(sAllParam);
     }
 
@@ -27,4 +38,20 @@ ConfigData::TrottleParam ConfigData::GetTrottleParam(){
 void ConfigData::SetTrottleParam(struct TrottleParam _Param){
     sAllParam.sTrottleParam = _Param;
     DataStorage.write(sAllParam);
+}
+
+
+ConfigData::MotorParam ConfigData::GetMotorParam(){
+    return sAllParam.sMotorParam;
+}
+ConfigData::DriveParam ConfigData::GetDriveParam(){
+    return sAllParam.sDriveParam;
+}
+void ConfigData::SetMotorParam(struct MotorParam _Param){
+    sAllParam.sMotorParam = _Param;
+    DataStorage.write(sAllParam);
+}
+void ConfigData::SetDriveParam(struct DriveParam _Param){
+    sAllParam.sDriveParam = _Param;
+    DataStorage.write(sAllParam);  
 }

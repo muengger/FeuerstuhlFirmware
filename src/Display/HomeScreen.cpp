@@ -12,15 +12,9 @@
     int HomeScreen::CyclicProcess(){
         static float test = 0;
         static int test2= 0;
-        Buttons::eButtonEvent Event = pButtons->GetEvent();
-        int Redraw = 0;
+        //Buttons::eButtonEvent Event = pButtons->GetEvent();
         if(FirstRun ){
-            Redraw = 1;
             FirstRun = 0;
-        }
-        if(Event != Buttons::eNoEvent){
-            Redraw = 1;
-            //Compute Buttons
         }
         pDisplay->GetRealDisplay()->clearDisplay();
         DrawStatic();

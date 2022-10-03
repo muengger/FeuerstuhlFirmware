@@ -10,9 +10,20 @@ class ConfigData{
         int Neutral;
         int DeadZone;
     };
+    struct MotorParam{
+        float WheelDiameter;    //m
+    };
+    enum eDriveState{eChild,eTeeny,eAdult,eCracy,eMaxState};
+    struct DriveParam{
+        eDriveState DriveState;
+        float MaxSpeedPerState[eMaxState]; //km/h
+        float MaxTorquePerState[eMaxState]; //Nm
+    };
     struct AllParam{
         int Initialized;
         struct TrottleParam sTrottleParam;
+        struct MotorParam sMotorParam;
+        struct DriveParam sDriveParam;
     };
 
     ConfigData();
@@ -20,7 +31,11 @@ class ConfigData{
 
     int Init();
     TrottleParam GetTrottleParam();
+    MotorParam GetMotorParam();
+    DriveParam GetDriveParam();
     void SetTrottleParam(struct TrottleParam _Param);
+    void SetMotorParam(struct MotorParam _Param);
+    void SetDriveParam(struct DriveParam _Param);
 
     private:
 
