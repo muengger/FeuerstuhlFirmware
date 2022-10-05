@@ -6,6 +6,8 @@
 #include "Button/Buttons.h"
 #include "ODrive/ODrive.h"
 #include "Trottle/Trottle.h"
+#include "ConfigData/ConfigData.h"
+#include "StateMaschine/StateMaschine.h"
 class Screen;
 #include "Screen.h"
 
@@ -17,17 +19,22 @@ class Screen;
 
 class Display{
     public:
-    Display(Odrive * _pOdrive,Buttons * _pButtons,Trottle * _pTrottle);
+    Display(Odrive * _pOdrive,Buttons * _pButtons,Trottle * _pTrottle,ConfigData * _pConfigData,StateMaschine * _pStateMaschine);
     ~Display();
 
     int Init();
     void ComputeCyclic();
     Adafruit_SSD1306 * GetRealDisplay();
     Trottle * GetTrottle();
+    float GetVoltage();
+    float GetSpeed();
+    StateMaschine::eStates GetRunState();
     private:
     Odrive * pOdrive;
     Buttons * pButtons;
     Trottle * pTrottle;
+    ConfigData * pConfigData;
+    StateMaschine * pStateMaschine;
     Adafruit_SSD1306 * display;//(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
     int ActualShownScreen;
     Screen * pScreenArr[10];

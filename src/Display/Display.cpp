@@ -14,10 +14,12 @@
 
 
 
-    Display::Display(Odrive * _pOdrive,Buttons * _pButtons,Trottle * _pTrottle){
+    Display::Display(Odrive * _pOdrive,Buttons * _pButtons,Trottle * _pTrottle,ConfigData * _pConfigData,StateMaschine * _pStateMaschine){
         pOdrive = _pOdrive;
         pButtons = _pButtons;
         pTrottle = _pTrottle;
+        pConfigData = _pConfigData;
+        pStateMaschine = _pStateMaschine;
     }
     Display::~Display(){}
     int Display::Init(){
@@ -45,4 +47,16 @@ Trottle * Display::GetTrottle(){
 }
 void Display::ComputeCyclic(){
     pScreenArr[ActualShownScreen]->CyclicProcess();
+}
+float Display::GetVoltage(){
+    return pOdrive->GetBusVoltage();
+}
+float Display::GetSpeed(){
+    float rps = pOdrive->GetRPS();
+    float diam = pConfigData->GetMotorParam().WheelDiameter;
+    float speed = rps * (diam * PI) * 3.6;
+    return speed;
+}
+StateMaschine::eStates Display::GetRunState(){
+    return pStateMaschine->GetState();
 }

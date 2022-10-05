@@ -51,7 +51,7 @@ int Odrive::CyclicUpdate(){
     case 3:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            RPM_L = res.toFloat();
+            RPS_L = res.toFloat();
         }
         state = 4;
     break;
@@ -65,7 +65,7 @@ int Odrive::CyclicUpdate(){
     case 5:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            RPM_R = res.toFloat();
+            RPS_R = res.toFloat();
         }
         state = 6;
     break;
@@ -97,9 +97,9 @@ int Odrive::CyclicUpdate(){
         Serial.println("BusVoltage");
         Serial.println(BusVoltage);
         Serial.println("RPM_L");
-        Serial.println(RPM_L);
+        Serial.println(RPS_L);
         Serial.println("RPM_R");
-        Serial.println(RPM_R);
+        Serial.println(RPS_R);
         state = 0;
     break;
     }
@@ -119,8 +119,8 @@ int Odrive::Stop(){
 float Odrive::GetBusVoltage(){
     return BusVoltage;
 }
-float Odrive::GetRPM(){
-    return (RPM_L + RPM_R)/2;
+float Odrive::GetRPS(){
+    return (RPS_L + RPS_R)/2;
 }
 void Odrive::SetTorque(float torque){
     Torque_L = torque;

@@ -12,17 +12,24 @@
     int HomeScreen::CyclicProcess(){
         static float test = 0;
         static int test2= 0;
+        static float MaxSpeed = 0;
         //Buttons::eButtonEvent Event = pButtons->GetEvent();
+        float Voltage = pDisplay->GetVoltage();
+        float Speed = pDisplay->GetSpeed();
+        StateMaschine::eStates RunState =  pDisplay->GetRunState();
+        if(MaxSpeed < Speed){
+            MaxSpeed = Speed;
+        }
         if(FirstRun ){
             FirstRun = 0;
         }
         pDisplay->GetRealDisplay()->clearDisplay();
         DrawStatic();
-        DrawSpeed(test);
-        DrawMaxSpeed(test);
+        DrawSpeed(Speed);
+        DrawMaxSpeed(MaxSpeed);
         DrawTrottle(pDisplay->GetTrottle()->GetTrottleVal());
-        DrawBatt(test2);
-        DrawState(test2/30);
+        DrawBatt(Voltage);
+        DrawState((int)RunState);
         test= test +0.1;
         test2++;
         if(test > 30){

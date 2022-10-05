@@ -12,7 +12,9 @@ Buttons cButtons;
 ConfigData cConfigData;
 OnBoardLed cOnBoardLed;
 Trottle cTrottle(&cConfigData);
-Display cDisplay(&cOdrive,&cButtons,&cTrottle);
+StateMaschine cStateMaschine(&cOdrive,&cTrottle);
+Display cDisplay(&cOdrive,&cButtons,&cTrottle,&cConfigData,&cStateMaschine);
+
 
 
 
