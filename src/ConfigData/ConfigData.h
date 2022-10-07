@@ -30,12 +30,10 @@ class ConfigData{
     ~ConfigData();
 
     int Init();
-    TrottleParam GetTrottleParam();
-    MotorParam GetMotorParam();
-    DriveParam GetDriveParam();
-    void SetTrottleParam(struct TrottleParam _Param);
-    void SetMotorParam(struct MotorParam _Param);
-    void SetDriveParam(struct DriveParam _Param);
+    TrottleParam * GetTrottleParam();
+    MotorParam * GetMotorParam();
+    DriveParam * GetDriveParam();
+    void SafeParam();
     float RPSToSpeed(float RPS);
     float SpeedToRPS(float Speed);
     private:

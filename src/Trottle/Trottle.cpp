@@ -15,11 +15,10 @@ Trottle::Trottle(ConfigData * _pConfigData){
 Trottle::~Trottle(){}
 
 int Trottle::Init(){
-  ConfigData::TrottleParam Param = pConfigData->GetTrottleParam();
-    LowestValue = Param.MinVal;
-    StopValue = Param.Neutral;
-    StopTollerance = Param.DeadZone / 2;
-    HighestValue = Param.MaxVal;
+    LowestValue = pConfigData->GetTrottleParam()->MinVal;
+    StopValue = pConfigData->GetTrottleParam()->Neutral;
+    StopTollerance = pConfigData->GetTrottleParam()->DeadZone / 2;
+    HighestValue = pConfigData->GetTrottleParam()->MaxVal;
     scaleLow = 1000 /((float)StopValue -  (float)StopTollerance - (float)LowestValue);
     offsetHigh = StopValue + StopTollerance;
     scaleHigh = 1000 / ((float)HighestValue - (float)offsetHigh);
@@ -63,9 +62,8 @@ int Trottle::CalibrateNeutral(){
     }
     res = res/30;
     StopValue = res;
-    ConfigData::TrottleParam Param = pConfigData->GetTrottleParam();
-    Param.Neutral = res;
-    pConfigData->SetTrottleParam(Param);
+    pConfigData->GetTrottleParam()->Neutral = res;
+    pConfigData->SafeParam();
     return 1;
   }
   return 0;
@@ -89,10 +87,9 @@ int Trottle::CalibrateMinMax(){
     }
     LowestValue = low;
     HighestValue = high;
-    ConfigData::TrottleParam Param = pConfigData->GetTrottleParam();
-    Param.MaxVal = high;
-    Param.MinVal = low;
-    pConfigData->SetTrottleParam(Param);
+    pConfigData->GetTrottleParam()->MaxVal = high;
+    pConfigData->GetTrottleParam()->MinVal = low;
+    pConfigData->SafeParam();
     return 1;
   }
   return 0;

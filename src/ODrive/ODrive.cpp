@@ -18,7 +18,7 @@ int Odrive::Init(){
     ODriveSerial = &Serial1;
     ODriveSerial->begin(57600);
     ODriveSerial->setTimeout(0);
-    MaxRPS = pConfigData->SpeedToRPS(pConfigData->GetDriveParam().MaxSpeedPerState[pConfigData->GetDriveParam().DriveState]);
+    MaxRPS = pConfigData->SpeedToRPS(pConfigData->GetDriveParam()->MaxSpeedPerState[pConfigData->GetDriveParam()->DriveState]);
     MaxSpeedUpdate = true;
     return 0;
 }

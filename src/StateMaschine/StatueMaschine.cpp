@@ -6,7 +6,7 @@ StateMaschine::StateMaschine(Odrive * _pOdrive,Trottle * _pTrottle,ConfigData * 
     pOdrive = _pOdrive;
     pTrottle = _pTrottle;
     pConfigData = _pConfigData;
-    SpeedState = pConfigData->GetDriveParam().DriveState;
+    SpeedState = pConfigData->GetDriveParam()->DriveState;
 }
 
 StateMaschine::~StateMaschine(){
@@ -20,7 +20,7 @@ void StateMaschine::CyclicRun(){
     break;
     case eRun:
     {
-        float MaxTorque = pConfigData->GetDriveParam().MaxTorquePerState[pConfigData->GetDriveParam().DriveState];
+        float MaxTorque = pConfigData->GetDriveParam()->MaxTorquePerState[pConfigData->GetDriveParam()->DriveState];
         int Trottle = pTrottle->GetTrottleVal();
         float torque = (MaxTorque/1000) * ((float)Trottle);
         pOdrive->SetTorque(torque);
@@ -52,8 +52,7 @@ ConfigData::eSpeedState StateMaschine::GetSpeedState(){
 }
 void StateMaschine::SetSpeedState(ConfigData::eSpeedState _SpeedState){
     SpeedState =  _SpeedState;
-    ConfigData::DriveParam Param = pConfigData->GetDriveParam();
-    Param.DriveState = SpeedState;
-    pConfigData->SetDriveParam(Param);
-    pOdrive->SetMaxSpeed(pConfigData->RPSToSpeed(pConfigData->GetDriveParam().MaxSpeedPerState[SpeedState]));
+    pConfigData->GetDriveParam()->DriveState = SpeedState;
+    pConfigData->SafeParam();
+    pOdrive->SetMaxSpeed(pConfigData->RPSToSpeed(pConfigData->GetDriveParam()->MaxSpeedPerState[SpeedState]));
 }

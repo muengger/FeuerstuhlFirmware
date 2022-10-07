@@ -32,28 +32,19 @@ ConfigData::~ConfigData(){
 
 }
 
-ConfigData::TrottleParam ConfigData::GetTrottleParam(){
-    return sAllParam.sTrottleParam;
+ConfigData::TrottleParam * ConfigData::GetTrottleParam(){
+    return &sAllParam.sTrottleParam;
 }
-void ConfigData::SetTrottleParam(struct TrottleParam _Param){
-    sAllParam.sTrottleParam = _Param;
+void ConfigData::SafeParam(){
     DataStorage.write(sAllParam);
 }
 
 
-ConfigData::MotorParam ConfigData::GetMotorParam(){
-    return sAllParam.sMotorParam;
+ConfigData::MotorParam * ConfigData::GetMotorParam(){
+    return &sAllParam.sMotorParam;
 }
-ConfigData::DriveParam ConfigData::GetDriveParam(){
-    return sAllParam.sDriveParam;
-}
-void ConfigData::SetMotorParam(struct MotorParam _Param){
-    sAllParam.sMotorParam = _Param;
-    DataStorage.write(sAllParam);
-}
-void ConfigData::SetDriveParam(struct DriveParam _Param){
-    sAllParam.sDriveParam = _Param;
-    DataStorage.write(sAllParam);  
+ConfigData::DriveParam * ConfigData::GetDriveParam(){
+    return &sAllParam.sDriveParam;
 }
 float ConfigData::RPSToSpeed(float RPS){
     float diam = sAllParam.sMotorParam.WheelDiameter;
