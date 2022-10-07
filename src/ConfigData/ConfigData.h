@@ -13,9 +13,9 @@ class ConfigData{
     struct MotorParam{
         float WheelDiameter;    //m
     };
-    enum eDriveState{eChild,eTeeny,eAdult,eCracy,eMaxState};
+    enum eSpeedState{eChild,eTeeny,eAdult,eCracy,eMaxState};
     struct DriveParam{
-        eDriveState DriveState;
+        eSpeedState DriveState;
         float MaxSpeedPerState[eMaxState]; //km/h
         float MaxTorquePerState[eMaxState]; //Nm
     };
@@ -36,7 +36,8 @@ class ConfigData{
     void SetTrottleParam(struct TrottleParam _Param);
     void SetMotorParam(struct MotorParam _Param);
     void SetDriveParam(struct DriveParam _Param);
-
+    float RPSToSpeed(float RPS);
+    float SpeedToRPS(float Speed);
     private:
 
     struct AllParam sAllParam;

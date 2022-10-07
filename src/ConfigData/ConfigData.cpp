@@ -55,3 +55,13 @@ void ConfigData::SetDriveParam(struct DriveParam _Param){
     sAllParam.sDriveParam = _Param;
     DataStorage.write(sAllParam);  
 }
+float ConfigData::RPSToSpeed(float RPS){
+    float diam = sAllParam.sMotorParam.WheelDiameter;
+    float speed = RPS * diam * PI * 3.6;
+    return speed;
+}
+float ConfigData::SpeedToRPS(float Speed){
+    float diam = sAllParam.sMotorParam.WheelDiameter;
+    float RPS = (diam * PI * 3.6)/Speed;
+    return RPS;
+}

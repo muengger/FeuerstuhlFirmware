@@ -7,12 +7,13 @@
 #include "Trottle/Trottle.h"
 #include "OnboardLedRGB/OnBoardLed.h"
 
-Odrive cOdrive;
+
 Buttons cButtons;
 ConfigData cConfigData;
+Odrive cOdrive(&cConfigData);
 OnBoardLed cOnBoardLed;
 Trottle cTrottle(&cConfigData);
-StateMaschine cStateMaschine(&cOdrive,&cTrottle);
+StateMaschine cStateMaschine(&cOdrive,&cTrottle,&cConfigData);
 Display cDisplay(&cOdrive,&cButtons,&cTrottle,&cConfigData,&cStateMaschine);
 
 
@@ -46,12 +47,14 @@ void loop() {
     oldmilisecond100Hz = newmillisecond;
     cButtons.ReadCyclic();
     cOdrive.CyclicUpdate();
+
   } 
 
   if((oldmilisecond10Hz+100) < newmillisecond){ //10Hz
     oldmilisecond10Hz = newmillisecond;
     
     cTrottle.Update();
+    cStateMaschine.CyclicRun();
   } 
 
   if((oldmilisecond5Hz+200) < newmillisecond){ //5Hz

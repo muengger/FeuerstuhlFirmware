@@ -52,11 +52,8 @@ float Display::GetVoltage(){
     return pOdrive->GetBusVoltage();
 }
 float Display::GetSpeed(){
-    float rps = pOdrive->GetRPS();
-    float diam = pConfigData->GetMotorParam().WheelDiameter;
-    float speed = rps * (diam * PI) * 3.6;
-    return speed;
+    return pConfigData->RPSToSpeed(pOdrive->GetRPS());
 }
 StateMaschine::eStates Display::GetRunState(){
-    return pStateMaschine->GetState();
+    return pStateMaschine->GetRunState();
 }
