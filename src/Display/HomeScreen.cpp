@@ -13,7 +13,11 @@
         static float test = 0;
         static int test2= 0;
         static float MaxSpeed = 0;
-        //Buttons::eButtonEvent Event = pButtons->GetEvent();
+        Buttons::eButtonEvent Event = pButtons->GetEvent();
+        if(Event == Buttons::eButtonEvent::eButtonMidPressLong){
+            Serial.println("ChangeToMenue");
+            pDisplay->SetScreenToMenue();
+        }
         float Voltage = pDisplay->GetVoltage();
         float Speed = pDisplay->GetSpeed();
         StateMaschine::eStates RunState =  pDisplay->GetRunState();

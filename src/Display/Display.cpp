@@ -10,6 +10,7 @@
 #include <splash.h>
 
 #include "HomeScreen.h"
+#include "ConfigMenue.h"
 
 
 
@@ -36,6 +37,7 @@
 
         //Init All the screens
         pScreenArr[0] = (Screen *) new HomeScreen(this,pButtons);
+        pScreenArr[1] = (Screen *) new ConfigMenue(this,pButtons,pConfigData);
 
         return 0;
     }
@@ -56,4 +58,10 @@ float Display::GetSpeed(){
 }
 StateMaschine::eStates Display::GetRunState(){
     return pStateMaschine->GetRunState();
+}
+void Display::SetScreenToMenue(){
+    ActualShownScreen = 1;
+}
+void Display::SetScreenToHome(){
+    ActualShownScreen = 0;
 }

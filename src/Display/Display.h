@@ -18,7 +18,7 @@ class Screen;
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 
 class Display{
-    public:
+public:
     Display(Odrive * _pOdrive,Buttons * _pButtons,Trottle * _pTrottle,ConfigData * _pConfigData,StateMaschine * _pStateMaschine);
     ~Display();
 
@@ -29,7 +29,9 @@ class Display{
     float GetVoltage();
     float GetSpeed();
     StateMaschine::eStates GetRunState();
-    private:
+    void SetScreenToMenue();
+    void SetScreenToHome();
+private:
     Odrive * pOdrive;
     Buttons * pButtons;
     Trottle * pTrottle;
