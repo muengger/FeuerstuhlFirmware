@@ -20,7 +20,17 @@
 
     }
     int ConfigMenue::CyclicProcess(){
+        static bool inZeile= false;
         Buttons::eButtonEvent Event = pButtons->GetEvent();
+        if(inZeile){
+            if(vConfigZeile[cursor].DrawZeile(Event,pDisplay)==0){
+                return 0;
+            }else{
+                inZeile = false;
+                return 0;
+            }
+            
+        }
         if(Event == Buttons::eButtonEvent::eButtonDownPressShort){
             if(cursor+1 < entry){
                 cursor++;
@@ -33,7 +43,11 @@
         }
         else if(Event == Buttons::eButtonEvent::eButtonLeftPressLong){
             pDisplay->SetScreenToHome();
+        }else if((Event == Buttons::eButtonEvent::eButtonRightPressShort)||(Event == Buttons::eButtonEvent::eButtonMidPressShort)){
+            inZeile = true;
+            return 0;
         }
+
         if(cursor > top+5){
             top++;
         }else if(cursor < top){
