@@ -9,8 +9,8 @@
 class ConfigZeile{
 public:
     
-    ConfigZeile(String _Desc,int * _pIData,int _IMax,int _IMin,int _IStep);
-    ConfigZeile(String _Desc,float * _pFData,float _FMax,float _FMin,float _FStep);
+    ConfigZeile(String _Desc,int * _pIData,int _IMax,int _IMin);
+    ConfigZeile(String _Desc,float * _pFData,float _FMax,float _FMin,int _Decimal);
     ConfigZeile(String _Desc,ConfigData::eSpeedState * _pEData);
     ~ConfigZeile();
 
@@ -26,11 +26,10 @@ String * pSData;
 int * pIData;
 int IMax;
 int IMin;
-int IStep;
 float * pFData;
 float FMax;
 float FMin;
-float FStep;
+int Decimal;
 ConfigData::eSpeedState * pEData;
 
 };

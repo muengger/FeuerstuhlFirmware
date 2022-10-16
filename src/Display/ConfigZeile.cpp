@@ -1,21 +1,20 @@
 #include "ConfigZeile.h"
 #include "Arduino.h"
    
-    ConfigZeile::ConfigZeile(String _Desc,int * _pIData,int _IMax,int _IMin,int _IStep){
+    ConfigZeile::ConfigZeile(String _Desc,int * _pIData,int _IMax,int _IMin){
         Type= eInt;
         Desc = _Desc;
         pIData = _pIData;
         IMax = _IMax;
         IMin = _IMin;
-        IStep = _IStep;
     }
-    ConfigZeile::ConfigZeile(String _Desc,float * _pFData,float _FMax,float _FMin,float _FStep){
+    ConfigZeile::ConfigZeile(String _Desc,float * _pFData,float _FMax,float _FMin,int _Decimal){
         Type= eFloat;
         Desc = _Desc;
         pFData = _pFData;
         FMax = _FMax;
         FMin = _FMin;
-        FStep = _FStep;
+        Decimal = _Decimal;
     }
     ConfigZeile::ConfigZeile(String _Desc,ConfigData::eSpeedState * _pEData){
         Type= eSpeedState;
@@ -64,37 +63,64 @@
                     init = false;
                     ActFloat = *pFData; 
                 }
-                String temp(ActFloat,2);
-                Length = temp.length()-1;
+                String temp(ActFloat,Decimal);
+                if(Decimal > 0){
+                    Length = temp.length()-1;
+                }else{
+                    Length = temp.length();
+                }
+                
                 if(Event == Buttons::eButtonEvent::eButtonLeftPressShort){
                     if(cursor < Length){
                         cursor ++;
-                        if(cursor == 2){
-                            cursor = 3;
+                        if(Decimal > 0){
+                            if(cursor == Decimal){
+                                cursor = Decimal+1;
+                            }   
                         }
+
                     }
                 }else if(Event == Buttons::eButtonEvent::eButtonRightPressShort){
                     if(cursor > 0){
                         cursor--;
                     }
-                    if(cursor == 2){
-                        cursor = 1;
+                    if(Decimal > 0){
+                        if(cursor == Decimal){
+                            cursor = Decimal-1;
+                        }   
                     }
                     
                 }else if(Event == Buttons::eButtonEvent::eButtonUpPressShort){
+                    float temp = ActFloat;
+                    if(Decimal > cursor){
+                        temp += pow(10,(cursor - Decimal));
+                    }else{
+                       temp += pow(10,(cursor - Decimal -1)); 
+                    }
+                    if((temp <= FMax)&&(temp >= FMin)){
+                        ActFloat = temp;
+                    }                
                     
                 }else if(Event == Buttons::eButtonEvent::eButtonDownPressShort){
-                    
+                    float temp = ActFloat;
+                    if(Decimal > cursor){
+                        temp -= pow(10,(cursor - Decimal));
+                    }else{
+                       temp -= pow(10,(cursor - Decimal -1)); 
+                    }    
+                    if((temp <= FMax)&&(temp >= FMin)){
+                        ActFloat = temp;
+                    }                
                 }
                 pDisplay->GetRealDisplay()->clearDisplay();
                 pDisplay->GetRealDisplay()->setTextSize(1);
                 pDisplay->GetRealDisplay()->setTextColor(SSD1306_WHITE); 
                 pDisplay->GetRealDisplay()->cp437(true); 
-                pDisplay->GetRealDisplay()->setCursor(1, 1);
+                pDisplay->GetRealDisplay()->setCursor(5, 1);
                 pDisplay->GetRealDisplay()->print(Desc);
-                pDisplay->GetRealDisplay()->setCursor(40, 10);
+                pDisplay->GetRealDisplay()->setCursor(40, 20);
 
-                pDisplay->GetRealDisplay()->drawChar(34+((temp.length()-cursor)*6),20,0x1E,SSD1306_WHITE,0,1);
+                pDisplay->GetRealDisplay()->drawChar(34+((temp.length()-cursor)*6),30,0x1E,SSD1306_WHITE,0,1);
                 pDisplay->GetRealDisplay()->print(temp);
                 pDisplay->GetRealDisplay()->display();
             }
