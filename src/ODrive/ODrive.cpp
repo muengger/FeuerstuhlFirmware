@@ -75,11 +75,11 @@ int Odrive::CyclicUpdate(){
     case 6: //Send run ore Stop command if someting has changed
         if(Run_Stop != old_run_Stop){ // State changed => send to drive
             if(Run_Stop){//Start Drive
-                ODriveSerial->write("w odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL\n");
-                ODriveSerial->write("w odrv0.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL\n");
+                ODriveSerial->write("w axis0.requested_state  8\n");
+                ODriveSerial->write("w axis1.requested_state  8\n");
             }else{
-                ODriveSerial->write("w odrv0.axis0.requested_state = IDE_STATE\n");
-                ODriveSerial->write("w odrv0.axis1.requested_state = IDE_STATE\n");
+                ODriveSerial->write("w axis0.requested_state  1\n");
+                ODriveSerial->write("w axis1.requested_state  1\n");
             }
             old_run_Stop = Run_Stop;
         }
@@ -89,8 +89,8 @@ int Odrive::CyclicUpdate(){
         {
             String storque_L(Torque_L,4);
             String storque_R(Torque_R,4);
-            String Command_L = "w odrv0.axis0.controller.input_torque = "+ storque_L + "\n";
-            String Command_R = "w odrv0.axis1.controller.input_torque = "+ storque_R + "\n";
+            String Command_L = "w axis0.controller.input_torque "+ storque_L + "\n";
+            String Command_R = "w axis1.controller.input_torque "+ storque_R + "\n";
             ODriveSerial->write(Command_L.c_str());
             ODriveSerial->write(Command_R.c_str());
             state = 8;
@@ -100,9 +100,10 @@ int Odrive::CyclicUpdate(){
         {
             if(MaxSpeedUpdate){
                 MaxSpeedUpdate = false;
-                String vel_lim(MaxRPS,4);
-                String Command_L = "w odrv0.axis0.controller.config.vel_limit = "+ vel_lim + "\n";
-                String Command_R = "w odrv0.axis1.controller.config.vel_limit = "+ vel_lim + "\n";
+                //String vel_lim(MaxRPS,4);
+                String vel_lim = "20";
+                String Command_L = "w axis0.controller.config.vel_limit "+ vel_lim + "\n";
+                String Command_R = "w axis1.controller.config.vel_limit "+ vel_lim + "\n";
                 ODriveSerial->write(Command_L.c_str());
                 ODriveSerial->write(Command_R.c_str());
             }
