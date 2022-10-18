@@ -8,10 +8,10 @@ ConfigData::ConfigData(){
     if(sAllParam.Initialized != 0x1234){
         //Set Default Param
         sAllParam.Initialized = 0x1234;
-        sAllParam.sTrottleParam.MaxVal = 1023;      //956;
-        sAllParam.sTrottleParam.MinVal = 2;         //0;
+        sAllParam.sTrottleParam.MaxVal = 958;      //956;
+        sAllParam.sTrottleParam.MinVal = 3;         //0;
         sAllParam.sTrottleParam.DeadZone = 10;
-        sAllParam.sTrottleParam.Neutral = 497;      //339;
+        sAllParam.sTrottleParam.Neutral = 341;      //339;
         sAllParam.sDriveParam.DriveState = eChild;
         sAllParam.sDriveParam.MaxSpeedPerState[eChild]= 10;
         sAllParam.sDriveParam.MaxSpeedPerState[eTeeny]= 20;

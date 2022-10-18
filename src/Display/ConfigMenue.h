@@ -6,15 +6,15 @@
 
 class ConfigMenue : Screen{
     public:
-    ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData);
+    ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData,Trottle * _pTrottle);
     ~ConfigMenue();
     int CyclicProcess();
     private:
     std::vector<ConfigZeile> vConfigZeile;
-    ConfigData * pConfigData;
     int cursor;
     int top;
     int entry;
+    Trottle * pTrottle;
 
 };
 

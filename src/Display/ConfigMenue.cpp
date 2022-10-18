@@ -1,20 +1,21 @@
     #include "ConfigMenue.h"
-    ConfigMenue::ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData):Screen(_pDisplay,_pButtons){
-        pConfigData = _pConfigData;
+    ConfigMenue::ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData,Trottle * _pTrottle):Screen(_pDisplay,_pButtons,_pConfigData){
         vConfigZeile.push_back(ConfigZeile("Speed State",&pConfigData->GetDriveParam()->DriveState));
-        vConfigZeile.push_back(ConfigZeile("Trottle Dead Zone",&pConfigData->GetTrottleParam()->DeadZone,30,5));
-        vConfigZeile.push_back(ConfigZeile("Speed Child Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eChild],30,3,2));
-        vConfigZeile.push_back(ConfigZeile("Speed Teeny Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eTeeny],30,3,2));
-        vConfigZeile.push_back(ConfigZeile("Speed Adult Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eAdult],30,3,2));
-        vConfigZeile.push_back(ConfigZeile("Speed Crazy Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eCracy],30,3,2));
-        vConfigZeile.push_back(ConfigZeile("Torque Child Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eChild],6,0.5,3));
-        vConfigZeile.push_back(ConfigZeile("Torque Teeny Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eTeeny],6,0.5,3));
-        vConfigZeile.push_back(ConfigZeile("Torque Adult Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eAdult],6,0.5,3));
-        vConfigZeile.push_back(ConfigZeile("Torque Crazy Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eCracy],6,3.5,3));
-        vConfigZeile.push_back(ConfigZeile("Wheel Diameter (m)",&pConfigData->GetMotorParam()->WheelDiameter,1,0.005,0.001));
+        vConfigZeile.push_back(ConfigZeile("Trottle Dead Zone",&pConfigData->GetTrottleParam()->DeadZone,30,5," "));
+        vConfigZeile.push_back(ConfigZeile("Speed Child Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eChild],30,3,2,"km/h"));
+        vConfigZeile.push_back(ConfigZeile("Speed Teeny Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eTeeny],30,3,2,"km/h"));
+        vConfigZeile.push_back(ConfigZeile("Speed Adult Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eAdult],30,3,2,"km/h"));
+        vConfigZeile.push_back(ConfigZeile("Speed Crazy Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eCracy],30,3,2,"km/h"));
+        vConfigZeile.push_back(ConfigZeile("Torque Child Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eChild],6,0.5,3,"Nm"));
+        vConfigZeile.push_back(ConfigZeile("Torque Teeny Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eTeeny],6,0.5,3,"Nm"));
+        vConfigZeile.push_back(ConfigZeile("Torque Adult Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eAdult],6,0.5,3,"Nm"));
+        vConfigZeile.push_back(ConfigZeile("Torque Crazy Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eCracy],6,3.5,3,"Nm"));
+        vConfigZeile.push_back(ConfigZeile("Wheel Diameter",&pConfigData->GetMotorParam()->WheelDiameter,1,0.005,3,"m"));
+        vConfigZeile.push_back(ConfigZeile("Trigger Calibration",&pConfigData->GetTrottleParam()->MaxVal,&pConfigData->GetTrottleParam()->MinVal,&pConfigData->GetTrottleParam()->Neutral,_pTrottle));
         entry = vConfigZeile.size();
         cursor = 0;
         top = 0;
+        pTrottle = _pTrottle;
     }
     ConfigMenue::~ConfigMenue(){
 
@@ -23,8 +24,13 @@
         static bool inZeile= false;
         Buttons::eButtonEvent Event = pButtons->GetEvent();
         if(inZeile){
-            if(vConfigZeile[cursor].DrawZeile(Event,pDisplay)==0){
+            int res = vConfigZeile[cursor].DrawZeile(Event,pDisplay);
+            if(res==0){
                 return 0;
+            }else if(res == 1){
+                pConfigData->SafeParam();
+                inZeile = false;
+                return 0;             
             }else{
                 inZeile = false;
                 return 0;

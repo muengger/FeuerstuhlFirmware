@@ -2,7 +2,7 @@
    
    
    
-    HomeScreen::HomeScreen(Display * _pDisplay,Buttons * _pButtons):Screen(_pDisplay,_pButtons){
+    HomeScreen::HomeScreen(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData):Screen(_pDisplay,_pButtons,_pConfigData){
 
     }
     HomeScreen::~HomeScreen(){
@@ -14,13 +14,22 @@
         static int test2= 0;
         static float MaxSpeed = 0;
         Buttons::eButtonEvent Event = pButtons->GetEvent();
+        StateMaschine::eStates RunState =  pDisplay->GetRunState();
+        ConfigData::eSpeedState SpeedState = pConfigData->GetDriveParam()->DriveState;
         if(Event == Buttons::eButtonEvent::eButtonMidPressLong){
             Serial.println("ChangeToMenue");
             pDisplay->SetScreenToMenue();
+            pDisplay->SetRunState(StateMaschine::eStates::eStop);
+        }else if (Event == Buttons::eButtonEvent::eButtonUpPressLong){
+            if(RunState == StateMaschine::eStates::eStop){
+                pDisplay->SetRunState(StateMaschine::eStates::eRun);
+            }else{
+                pDisplay->SetRunState(StateMaschine::eStates::eStop);
+            }
         }
         float Voltage = pDisplay->GetVoltage();
         float Speed = pDisplay->GetSpeed();
-        StateMaschine::eStates RunState =  pDisplay->GetRunState();
+        
         if(MaxSpeed < Speed){
             MaxSpeed = Speed;
         }
@@ -34,6 +43,7 @@
         DrawTrottle(pDisplay->GetTrottle()->GetTrottleVal());
         DrawBatt(Voltage);
         DrawState((int)RunState);
+        DrawSpeedState(SpeedState);
         test= test +0.1;
         test2++;
         if(test > 30){
@@ -72,9 +82,10 @@
     }
 
     int HomeScreen::DrawTrottle(int  trottle){
-        int middle = 31;
-        int max = 17;
-        int Y = (trottle / (1000/max)) + middle;
+        int middle = 26;
+        int max = 12;
+
+        int Y = (-trottle / (1000/max)) + middle;
         pDisplay->GetRealDisplay()->drawLine(72,Y,77,Y,SSD1306_WHITE);
         return 0;
     }  
@@ -82,7 +93,7 @@
     int HomeScreen::DrawBatt(int  percent){
         
         float max = 13;
-        float min = 51;
+        float min = 41;
         int Y = ((min - max)/100) * (100 - percent) + max;
         int h = min - Y;
         pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
@@ -107,7 +118,30 @@
 
         return 0;
     }
-
+    int HomeScreen::DrawSpeedState(ConfigData::eSpeedState SpeedState){
+        pDisplay->GetRealDisplay()->setCursor(62, 46);
+        //pDisplay->GetRealDisplay()->setTextColor(SSD1306_WHITE); 
+        switch (SpeedState)
+        {
+            case ConfigData::eSpeedState::eChild:
+                pDisplay->GetRealDisplay()->print("Speed:Child");
+            break;
+            case ConfigData::eSpeedState::eTeeny:
+                pDisplay->GetRealDisplay()->print("Speed:Teeny");
+            break;
+            case ConfigData::eSpeedState::eAdult:
+                pDisplay->GetRealDisplay()->print("Speed:Adult");
+            break;      
+            case ConfigData::eSpeedState::eCracy:
+                pDisplay->GetRealDisplay()->print("Speed:Cracy");
+            break;
+            case ConfigData::eSpeedState::eMaxState:
+                pDisplay->GetRealDisplay()->print("Speed:Error");
+            break;
+        }
+        
+        return 0;
+    }
     int HomeScreen::DrawStatic(){
         pDisplay->GetRealDisplay()->drawCircle(32,32,30,SSD1306_WHITE);
         pDisplay->GetRealDisplay()->fillCircle(32,32,3,SSD1306_WHITE);
@@ -139,11 +173,11 @@
         pDisplay->GetRealDisplay()->drawChar(43,43,'3',SSD1306_WHITE,SSD1306_WHITE,1);
         pDisplay->GetRealDisplay()->drawChar(49,43,'0',SSD1306_WHITE,SSD1306_WHITE,1);
 
-        pDisplay->GetRealDisplay()->drawRoundRect(70,10,10,44,4,SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->drawRoundRect(70,10,10,34,4,SSD1306_WHITE);
 
-        pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,44,4,SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,34,4,SSD1306_WHITE);
         pDisplay->GetRealDisplay()->fillRect(17,55,32,10,SSD1306_WHITE);
-        pDisplay->GetRealDisplay()->fillRect(60,55,68,10,SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->fillRect(60,45,68,20,SSD1306_WHITE);
 
 
         pDisplay->GetRealDisplay()->setTextSize(1);
@@ -153,7 +187,7 @@
         pDisplay->GetRealDisplay()->print("PWR Batt");
         pDisplay->GetRealDisplay()->setCursor(100, 12);   
         pDisplay->GetRealDisplay()->print("Full");
-        pDisplay->GetRealDisplay()->setCursor(100, 44);   
+        pDisplay->GetRealDisplay()->setCursor(100, 34);   
         pDisplay->GetRealDisplay()->print("Low");
         pDisplay->GetRealDisplay()->setCursor(62, 56);    
         pDisplay->GetRealDisplay()->print("State: ");

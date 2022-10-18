@@ -4,7 +4,7 @@
 
 class HomeScreen : Screen{
     public:
-    HomeScreen(Display * _pDisplay,Buttons * _pButtons);
+    HomeScreen(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData);
     ~HomeScreen();
     int CyclicProcess();
     private:
@@ -14,6 +14,7 @@ class HomeScreen : Screen{
     int DrawTrottle(int  trottle);
     int DrawBatt(int  percent);
     int DrawState(int State);
+    int DrawSpeedState(ConfigData::eSpeedState SpeedState);
 
 };
 

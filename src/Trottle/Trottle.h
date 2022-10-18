@@ -11,10 +11,10 @@ class Trottle{
     int Init();
     int Update();
     int GetTrottleVal();
-    //Call These function with 10Hz until 1 is returned the its finished
-    int CalibrateNeutral();
-    //Call These function with 10Hz until 1 is returned the its finished
-    int CalibrateMinMax();
+    int CalibrateNeutral(int * Neutral);
+    int CalibrateMinMax(int * Max,int *Min);
+    int ActCalibration(int Max,int Min,int Neutral);
+    int SafeCalibration();
     private:
     int LowestValue;
     int StopValue;

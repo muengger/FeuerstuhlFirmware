@@ -96,7 +96,7 @@ int Odrive::CyclicUpdate(){
             state = 8;
         }     
     break;
-        case 8: // Send new Torque on both motors
+        case 8: // Send new Max Speed on both motors
         {
             if(MaxSpeedUpdate){
                 MaxSpeedUpdate = false;

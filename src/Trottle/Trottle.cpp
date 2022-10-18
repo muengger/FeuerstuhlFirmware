@@ -50,47 +50,37 @@ int Trottle::GetTrottleVal(){
     return CurrentSpeedPromille;
 }
 
-int Trottle::CalibrateNeutral(){
-  static int counter = 0;
-  static int Arr[30];
-  Arr[counter] = analogRead(PIN_TROTTLE_SENSOR);
-  counter++;
-  if(counter == 30){
-    float res = 0;
-    for(int i = 0;i<30;i++){
-      res+=Arr[i];
-    }
-    res = res/30;
-    StopValue = res;
-    pConfigData->GetTrottleParam()->Neutral = res;
-    pConfigData->SafeParam();
-    return 1;
-  }
+int Trottle::CalibrateNeutral(int * Neutral){
+
+  * Neutral = analogRead(PIN_TROTTLE_SENSOR);
   return 0;
 }
 
-int Trottle::CalibrateMinMax(){
-  static int counter = 0;
-  static int Arr[50];
-  Arr[counter] = analogRead(PIN_TROTTLE_SENSOR);
-  counter++;
-  if(counter == 50){
-    int low = 0;
-    int high = 0;
-    for(int i = 0;i<50;i++){
-      if(Arr[i] > high){
-        high = Arr[i];
-      }
-      if(Arr[i] < low){
-        low = Arr[i];
-      }
-    }
-    LowestValue = low;
-    HighestValue = high;
-    pConfigData->GetTrottleParam()->MaxVal = high;
-    pConfigData->GetTrottleParam()->MinVal = low;
-    pConfigData->SafeParam();
-    return 1;
+int Trottle::CalibrateMinMax(int * Max,int *Min){
+
+  int ActVal = analogRead(PIN_TROTTLE_SENSOR);
+  if(ActVal < *Min){
+    *Min = ActVal;
+  }else if (ActVal > *Max){
+    *Max = ActVal;
   }
+  return 0;
+}
+int Trottle::ActCalibration(int Max,int Min,int Neutral){
+  LowestValue = Min;
+  StopValue = Neutral;
+  StopTollerance = pConfigData->GetTrottleParam()->DeadZone / 2;
+  HighestValue = Max;
+  scaleLow = 1000 /((float)StopValue -  (float)StopTollerance - (float)LowestValue);
+  offsetHigh = StopValue + StopTollerance;
+  scaleHigh = 1000 / ((float)HighestValue - (float)offsetHigh);
+
+  return 0;
+}
+int Trottle::SafeCalibration(){
+  pConfigData->GetTrottleParam()->MinVal = LowestValue;
+  pConfigData->GetTrottleParam()->MaxVal = HighestValue;
+  pConfigData->GetTrottleParam()->Neutral = StopValue;
+  pConfigData->SafeParam();
   return 0;
 }

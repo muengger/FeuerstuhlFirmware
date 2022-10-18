@@ -29,8 +29,11 @@ public:
     float GetVoltage();
     float GetSpeed();
     StateMaschine::eStates GetRunState();
+    void SetRunState(StateMaschine::eStates NewState);
+    
     void SetScreenToMenue();
     void SetScreenToHome();
+
 private:
     Odrive * pOdrive;
     Buttons * pButtons;

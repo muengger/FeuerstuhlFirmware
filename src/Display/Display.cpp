@@ -36,8 +36,8 @@
         display->display();
 
         //Init All the screens
-        pScreenArr[0] = (Screen *) new HomeScreen(this,pButtons);
-        pScreenArr[1] = (Screen *) new ConfigMenue(this,pButtons,pConfigData);
+        pScreenArr[0] = (Screen *) new HomeScreen(this,pButtons,pConfigData);
+        pScreenArr[1] = (Screen *) new ConfigMenue(this,pButtons,pConfigData,pTrottle);
 
         return 0;
     }
@@ -58,6 +58,9 @@ float Display::GetSpeed(){
 }
 StateMaschine::eStates Display::GetRunState(){
     return pStateMaschine->GetRunState();
+}
+void Display::SetRunState(StateMaschine::eStates NewState){
+    pStateMaschine->SetRunState(NewState);
 }
 void Display::SetScreenToMenue(){
     ActualShownScreen = 1;
