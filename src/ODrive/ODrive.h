@@ -32,6 +32,11 @@ class Odrive{
     int Run_Stop;
     float Torque_L;
     float Torque_R;
+    bool ReadError;
+    uint8_t OdriveError; 
+    uint32_t OdriveAxix0Error;
+    uint32_t OdriveAxix1Error;
+
     ConfigData * pConfigData;
 };
 

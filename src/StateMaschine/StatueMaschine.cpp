@@ -38,11 +38,15 @@ StateMaschine::eStates StateMaschine::GetRunState(){
 }
 
 int StateMaschine::SetRunState(eStates NewState){
-    State = NewState;
+
     if(NewState == eRun){
-        SetSpeedState(pConfigData->GetDriveParam()->DriveState);
-        pOdrive->Start();
+        if(pTrottle->GetTrottleVal()== 0){ //check if Trottle is 0 
+            State = NewState;
+            SetSpeedState(pConfigData->GetDriveParam()->DriveState);
+            pOdrive->Start();
+        }
     }else{
+        State = NewState;
         pOdrive->Stop();
     }
     return 0;
@@ -53,5 +57,5 @@ ConfigData::eSpeedState StateMaschine::GetSpeedState(){
 }
 void StateMaschine::SetSpeedState(ConfigData::eSpeedState _SpeedState){
     SpeedState =  _SpeedState;
-    pOdrive->SetMaxSpeed(pConfigData->RPSToSpeed(pConfigData->GetDriveParam()->MaxSpeedPerState[SpeedState]));
+    pOdrive->SetMaxSpeed(pConfigData->GetDriveParam()->MaxSpeedPerState[SpeedState]);
 }

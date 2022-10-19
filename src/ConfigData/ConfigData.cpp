@@ -8,10 +8,10 @@ ConfigData::ConfigData(){
     if(sAllParam.Initialized != 0x1234){
         //Set Default Param
         sAllParam.Initialized = 0x1234;
-        sAllParam.sTrottleParam.MaxVal = 958;      //956;
-        sAllParam.sTrottleParam.MinVal = 3;         //0;
+        sAllParam.sTrottleParam.MaxVal = 958;
+        sAllParam.sTrottleParam.MinVal = 3;
         sAllParam.sTrottleParam.DeadZone = 10;
-        sAllParam.sTrottleParam.Neutral = 341;      //339;
+        sAllParam.sTrottleParam.Neutral = 341;
         sAllParam.sDriveParam.DriveState = eChild;
         sAllParam.sDriveParam.MaxSpeedPerState[eChild]= 10;
         sAllParam.sDriveParam.MaxSpeedPerState[eTeeny]= 20;
@@ -21,7 +21,7 @@ ConfigData::ConfigData(){
         sAllParam.sDriveParam.MaxTorquePerState[eTeeny]= 2;
         sAllParam.sDriveParam.MaxTorquePerState[eAdult]= 3;
         sAllParam.sDriveParam.MaxTorquePerState[eCracy]= 4;
-        sAllParam.sMotorParam.WheelDiameter = 0.2;
+        sAllParam.sMotorParam.WheelDiameter = 0.16;
         
         DataStorage.write(sAllParam);
     }
