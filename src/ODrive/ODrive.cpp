@@ -14,7 +14,7 @@ Odrive::~Odrive(){
 
 int Odrive::Init(){
 
-
+    ReadError = false;
     ODriveSerial = &Serial1;
     ODriveSerial->begin(57600);
     ODriveSerial->setTimeout(0);
@@ -54,7 +54,12 @@ int Odrive::CyclicUpdate(){
     case 3: //Read revolutions per second Motor 0 Answer
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            RPS_L = res.toFloat();
+            float fres = res.toFloat();
+            if(fres < 0){
+                RPS_L = fres * -1;
+            }else{
+                RPS_L = fres;
+            }
         }
         state = 4;
     break;
@@ -68,7 +73,13 @@ int Odrive::CyclicUpdate(){
     case 5://Read revolutions per second Motor 1 Answer
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            RPS_R = res.toFloat();
+            float fres = res.toFloat();
+            if(fres < 0){
+                RPS_R = fres * -1;
+            }else{
+                RPS_R = fres;
+            }
+             
         }
         state = 6;
     break;
@@ -96,19 +107,66 @@ int Odrive::CyclicUpdate(){
             state = 8;
         }     
     break;
-        case 8: // Send new Max Speed on both motors
+    case 8: // Send new Max Speed on both motors
         {
             if(MaxSpeedUpdate){
                 MaxSpeedUpdate = false;
-                //String vel_lim(MaxRPS,4);
-                String vel_lim = "20";
+                String vel_lim(MaxRPS,4);
+                //String vel_lim = "20";
                 String Command_L = "w axis0.controller.config.vel_limit "+ vel_lim + "\n";
                 String Command_R = "w axis1.controller.config.vel_limit "+ vel_lim + "\n";
                 ODriveSerial->write(Command_L.c_str());
                 ODriveSerial->write(Command_R.c_str());
             }
-            state = 0;
+            state = 9;
         }     
+    break;
+    case 9: //Read All error
+        if(ReadError){
+            while(ODriveSerial->available()){
+                ODriveSerial->read();
+            }
+            ODriveSerial->write("r error\n");
+            state = 10;
+        }else{
+            state = 0;
+        }
+    break;
+    case 10://Read revolutions per second Motor 1 Answer
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError = res.toInt();
+        }
+        state = 11;
+    break;
+    case 11: //Read All error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis0.error\n");
+        state = 12;
+    break;
+    case 12://Read revolutions per second Motor 1 Answer
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveAxix0Error = res.toInt();
+        }
+        state = 13;
+    break;
+    case 13: //Read All error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis1.error\n");
+        state = 14;
+    break;
+    case 14://Read revolutions per second Motor 1 Answer
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveAxix1Error = res.toInt();
+        }
+        ReadError = false;
+        state = 0;
     break;
     case 100:
         Serial.println("BusVoltage");
