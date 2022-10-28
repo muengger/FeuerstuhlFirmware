@@ -53,6 +53,6 @@ float ConfigData::RPSToSpeed(float RPS){
 }
 float ConfigData::SpeedToRPS(float Speed){
     float diam = sAllParam.sMotorParam.WheelDiameter;
-    float RPS = (diam * PI * 3.6)/Speed;
+    float RPS = Speed/(diam * PI * 3.6);
     return RPS;
 }

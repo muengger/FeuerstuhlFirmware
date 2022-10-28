@@ -256,10 +256,31 @@
                 pDisplay->GetRealDisplay()->setTextSize(1);
                 pDisplay->GetRealDisplay()->setTextColor(SSD1306_WHITE); 
                 pDisplay->GetRealDisplay()->cp437(true); 
+                char buff[30];
+
                 pDisplay->GetRealDisplay()->setCursor(1, 1);
-                pDisplay->GetRealDisplay()->print(Desc);
-                pDisplay->GetRealDisplay()->setCursor(1, 15);
-                pDisplay->GetRealDisplay()->print("Odrive Error ");
+                sprintf(buff,"Main       0x%02X",pOdrive->GetOdriveError().OdriveError);
+                pDisplay->GetRealDisplay()->print(buff);
+
+                pDisplay->GetRealDisplay()->setCursor(1, 10);
+                sprintf(buff,"Ctrlr      0x%08X",pOdrive->GetOdriveError().OdriveControllerError);
+                pDisplay->GetRealDisplay()->print(buff);
+
+                pDisplay->GetRealDisplay()->setCursor(1, 20);
+                sprintf(buff,"Encoder    0x%08X",pOdrive->GetOdriveError().OdriveEncoderError);
+                pDisplay->GetRealDisplay()->print(buff);    
+
+                pDisplay->GetRealDisplay()->setCursor(1, 30);
+                sprintf(buff,"SensLesEst 0x%08X",pOdrive->GetOdriveError().OdriveSensorlessEstimatorError);
+                pDisplay->GetRealDisplay()->print(buff);   
+
+                pDisplay->GetRealDisplay()->setCursor(1, 40);
+                sprintf(buff,"Axis0      0x%08X",pOdrive->GetOdriveError().OdriveAxix0Error);
+                pDisplay->GetRealDisplay()->print(buff);   
+
+                pDisplay->GetRealDisplay()->setCursor(1, 50);
+                sprintf(buff,"Axis1      0x%08X",pOdrive->GetOdriveError().OdriveAxix1Error);
+                pDisplay->GetRealDisplay()->print(buff);        
 
                 pDisplay->GetRealDisplay()->display();
         }

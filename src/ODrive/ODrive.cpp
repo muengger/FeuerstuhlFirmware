@@ -113,6 +113,7 @@ int Odrive::CyclicUpdate(){
                 MaxSpeedUpdate = false;
                 String vel_lim(MaxRPS,4);
                 //String vel_lim = "20";
+                Serial.println(vel_lim);
                 String Command_L = "w axis0.controller.config.vel_limit "+ vel_lim + "\n";
                 String Command_R = "w axis1.controller.config.vel_limit "+ vel_lim + "\n";
                 ODriveSerial->write(Command_L.c_str());
@@ -272,8 +273,11 @@ void Odrive::SetTorque(float torque){
     Torque_R = torque;
 }
 
-void Odrive::SetMaxSpeed(float Speed){  
+void Odrive::SetMaxSpeed(float Speed){ 
+    Serial.println("Max Speed, RPS"); 
+    Serial.println(Speed);
     MaxRPS = pConfigData->SpeedToRPS(Speed);
+    Serial.println(MaxRPS);
     MaxSpeedUpdate = true;
 
 }
