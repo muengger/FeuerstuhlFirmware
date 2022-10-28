@@ -37,7 +37,7 @@
 
         //Init All the screens
         pScreenArr[0] = (Screen *) new HomeScreen(this,pButtons,pConfigData);
-        pScreenArr[1] = (Screen *) new ConfigMenue(this,pButtons,pConfigData,pTrottle);
+        pScreenArr[1] = (Screen *) new ConfigMenue(this,pButtons,pConfigData,pTrottle,pOdrive);
 
         return 0;
     }

@@ -1,5 +1,7 @@
     #include "ConfigMenue.h"
-    ConfigMenue::ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData,Trottle * _pTrottle):Screen(_pDisplay,_pButtons,_pConfigData){
+    ConfigMenue::ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData,Trottle * _pTrottle,Odrive * _pOdrive):Screen(_pDisplay,_pButtons,_pConfigData){
+        pTrottle = _pTrottle;
+        pOdrive = _pOdrive;
         vConfigZeile.push_back(ConfigZeile("Speed State",&pConfigData->GetDriveParam()->DriveState));
         vConfigZeile.push_back(ConfigZeile("Trottle Dead Zone",&pConfigData->GetTrottleParam()->DeadZone,30,5," "));
         vConfigZeile.push_back(ConfigZeile("Speed Child Mode",&pConfigData->GetDriveParam()->MaxSpeedPerState[ConfigData::eChild],30,3,2,"km/h"));
@@ -10,12 +12,12 @@
         vConfigZeile.push_back(ConfigZeile("Torque Teeny Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eTeeny],6,0.5,3,"Nm"));
         vConfigZeile.push_back(ConfigZeile("Torque Adult Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eAdult],6,0.5,3,"Nm"));
         vConfigZeile.push_back(ConfigZeile("Torque Crazy Mode",&pConfigData->GetDriveParam()->MaxTorquePerState[ConfigData::eCracy],6,3.5,3,"Nm"));
+        vConfigZeile.push_back(ConfigZeile("Odrive Errors",_pOdrive));
         vConfigZeile.push_back(ConfigZeile("Wheel Diameter",&pConfigData->GetMotorParam()->WheelDiameter,1,0.005,3,"m"));
         vConfigZeile.push_back(ConfigZeile("Trigger Calibration",&pConfigData->GetTrottleParam()->MaxVal,&pConfigData->GetTrottleParam()->MinVal,&pConfigData->GetTrottleParam()->Neutral,_pTrottle));
         entry = vConfigZeile.size();
         cursor = 0;
         top = 0;
-        pTrottle = _pTrottle;
     }
     ConfigMenue::~ConfigMenue(){
 

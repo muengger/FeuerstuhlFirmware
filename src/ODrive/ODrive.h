@@ -20,7 +20,19 @@ class Odrive{
     void SetTorque(float torque);
     void SetMaxSpeed(float Speed);
     float GetMaxSpeed();
-
+    struct sOdriveError{
+        uint8_t OdriveError; 
+        uint32_t OdriveAxix0Error;
+        uint32_t OdriveAxix1Error;
+        uint32_t OdriveAxix0MotorError;
+        uint32_t OdriveAxix1MotorError;
+        uint32_t OdriveControllerError;
+        uint32_t OdriveSensorlessEstimatorError;
+        uint32_t OdriveEncoderError;
+    };
+    void ActualizeOdriveError();
+    sOdriveError GetOdriveError();
+    
     private:
     //Odrive Configuration
     Uart *ODriveSerial;// (&sercom3, 0, 1, SERCOM_RX_PAD_1, UART_TX_PAD_0);
@@ -33,9 +45,7 @@ class Odrive{
     float Torque_L;
     float Torque_R;
     bool ReadError;
-    uint8_t OdriveError; 
-    uint32_t OdriveAxix0Error;
-    uint32_t OdriveAxix1Error;
+    sOdriveError OdriveError;
 
     ConfigData * pConfigData;
 };

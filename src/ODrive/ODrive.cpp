@@ -121,7 +121,7 @@ int Odrive::CyclicUpdate(){
             state = 9;
         }     
     break;
-    case 9: //Read All error
+    case 9: //Read odrive error
         if(ReadError){
             while(ODriveSerial->available()){
                 ODriveSerial->read();
@@ -132,38 +132,108 @@ int Odrive::CyclicUpdate(){
             state = 0;
         }
     break;
-    case 10://Read revolutions per second Motor 1 Answer
+    case 10:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError = res.toInt();
+            OdriveError.OdriveError = res.toInt();
         }
         state = 11;
     break;
-    case 11: //Read All error
+    case 11: //Read Axis 0 error
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
         ODriveSerial->write("r axis0.error\n");
         state = 12;
     break;
-    case 12://Read revolutions per second Motor 1 Answer
+    case 12:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveAxix0Error = res.toInt();
+            OdriveError.OdriveAxix0Error = res.toInt();
         }
         state = 13;
     break;
-    case 13: //Read All error
+    case 13: //Read Axis 1 error
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
         ODriveSerial->write("r axis1.error\n");
         state = 14;
     break;
-    case 14://Read revolutions per second Motor 1 Answer
+    case 14:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveAxix1Error = res.toInt();
+            OdriveError.OdriveAxix1Error = res.toInt();
+        }
+        state = 15;
+    break;
+    case 15: //Read Axis0.motor error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis0.motor.error\n");
+        state = 16;
+    break;
+    case 16:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveAxix0MotorError = res.toInt();
+        }
+        state = 17;
+    break;
+    case 17: //Read Axis1.motor error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis1.motor.error\n");
+        state = 18;
+    break;
+    case 18:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveAxix1MotorError = res.toInt();
+        }
+        state = 19;
+    break;
+    case 19: //Read Controller error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r controller.error\n");
+        state = 20;
+    break;
+    case 20:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveControllerError = res.toInt();
+        }
+        state = 21;
+    break;
+    case 21: //Read SensorlessEstimator error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r SensorlessEstimator.error\n");
+        state = 22;
+    break;
+    case 22:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveSensorlessEstimatorError = res.toInt();
+        }
+        state = 23;
+    break;
+    case 23: //Read encoder error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r encoder.error\n");
+        state = 24;
+    break;
+    case 24:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveEncoderError = res.toInt();
         }
         ReadError = false;
         state = 0;
@@ -209,4 +279,18 @@ void Odrive::SetMaxSpeed(float Speed){
 }
 float Odrive::GetMaxSpeed(){
     return pConfigData->RPSToSpeed(MaxRPS);
+}
+
+void Odrive::ActualizeOdriveError(){
+    if(ReadError == false){
+        ReadError = true;
+    }
+}
+Odrive::sOdriveError Odrive::GetOdriveError(){
+    if(ReadError == true){//While reading give 0 
+        sOdriveError Error = {0};
+        return Error;
+    }else{
+        return OdriveError;
+    }
 }

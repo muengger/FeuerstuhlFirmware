@@ -5,6 +5,7 @@
 #include "Button/Buttons.h"
 #include "Display/Display.h"
 #include "Trottle/Trottle.h"
+#include "ODrive/ODrive.h"
 #include "Arduino.h"
 
 class ConfigZeile{
@@ -17,6 +18,8 @@ public:
     ConfigZeile(String _Desc,ConfigData::eSpeedState * _pEData);
     //Constructor for Sensor Calibration
     ConfigZeile(String _Desc,int * _CaliMax,int * _CaliMin,int * _Neutral,Trottle * _pTrottle);
+    //Constructor for Error View
+    ConfigZeile(String _Desc,Odrive * _pOdrive);
 
     ~ConfigZeile();
 
@@ -25,7 +28,7 @@ public:
 
 
 private:
-    enum eDataType{eInt,eFloat,eSpeedState,eSensorCal};
+    enum eDataType{eInt,eFloat,eSpeedState,eSensorCal,eODrive};
     eDataType Type;
     String Desc;
     String * pSData;
@@ -40,6 +43,7 @@ private:
     int * CaliMin;
     int * Neutral;
     Trottle * pTrottle;
+    Odrive * pOdrive;
 
 };
 

@@ -3,10 +3,11 @@
 #include <vector>
 #include "Display/Screen.h"
 #include "Display/ConfigZeile.h"
+#include "ODrive/ODrive.h"
 
 class ConfigMenue : Screen{
     public:
-    ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData,Trottle * _pTrottle);
+    ConfigMenue(Display * _pDisplay,Buttons * _pButtons,ConfigData * _pConfigData,Trottle * _pTrottle,Odrive * _pOdrive);
     ~ConfigMenue();
     int CyclicProcess();
     private:
@@ -15,6 +16,7 @@ class ConfigMenue : Screen{
     int top;
     int entry;
     Trottle * pTrottle;
+    Odrive * pOdrive;
 
 };
 
