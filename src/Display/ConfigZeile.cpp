@@ -245,43 +245,56 @@
                     return 1;
                 }
         }else if (Type == eODrive){
+                static Odrive::sOdriveError sOdriveError;
+                static bool newData = false;
+                static char sErrorArr[11][23];
+                static int cursor = 0;
                 if(init){
                     init = false;
                     pOdrive->ActualizeOdriveError();
+                    newData = true;
                 }
                 if(Event == Buttons::eButtonEvent::eButtonMidPressShort){
                     pOdrive->ActualizeOdriveError();
+                    newData = true;
                 } 
+                if(Event == Buttons::eButtonEvent::eButtonUpPressShort){
+                    if(cursor > 0){
+                        cursor--;
+                    }
+                } 
+                if(Event == Buttons::eButtonEvent::eButtonDownPressShort){
+                    if(cursor < 5){
+                        cursor++;
+                    }
+                } 
+                if(newData){
+                    bool Busy;
+                    sOdriveError = pOdrive->GetOdriveError(&Busy);
+                    if(Busy == false){
+                        newData = false;
+                    }
+                    sprintf(&(sErrorArr[0 ][0]),"System     0x%02X",(unsigned int)sOdriveError.OdriveError);
+                    sprintf(&(sErrorArr[1 ][0]),"A0         0x%08X",(unsigned int)sOdriveError.OdriveAxix0Error);
+                    sprintf(&(sErrorArr[2 ][0]),"A1         0x%08X",(unsigned int)sOdriveError.OdriveAxis1Error);
+                    sprintf(&(sErrorArr[3 ][0]),"A0Motor    0x%08X",(unsigned int)sOdriveError.OdriveAxis0MotorError);
+                    sprintf(&(sErrorArr[4 ][0]),"A1Motor    0x%08X",(unsigned int)sOdriveError.OdriveAxis1MotorError);
+                    sprintf(&(sErrorArr[5 ][0]),"A0Control  0x%08X",(unsigned int)sOdriveError.OdriveAxis0ControllerError);
+                    sprintf(&(sErrorArr[6 ][0]),"A1Control  0x%08X",(unsigned int)sOdriveError.OdriveAxis1ControllerError);
+                    sprintf(&(sErrorArr[7 ][0]),"A0Encoder  0x%08X",(unsigned int)sOdriveError.OdriveAxis0EncoderError);
+                    sprintf(&(sErrorArr[8 ][0]),"A1Encoder  0x%08X",(unsigned int)sOdriveError.OdriveAxis1EncoderError);
+                    sprintf(&(sErrorArr[9 ][0]),"A0SlessEst 0x%08X",(unsigned int)sOdriveError.OdriveAxis0SensorlessEstimatorError);
+                    sprintf(&(sErrorArr[10][0]),"A1SlessEst 0x%08X",(unsigned int)sOdriveError.OdriveAxis0SensorlessEstimatorError);
+                }
                 pDisplay->GetRealDisplay()->clearDisplay();
                 pDisplay->GetRealDisplay()->setTextSize(1);
                 pDisplay->GetRealDisplay()->setTextColor(SSD1306_WHITE); 
                 pDisplay->GetRealDisplay()->cp437(true); 
-                char buff[30];
 
-                pDisplay->GetRealDisplay()->setCursor(1, 1);
-                sprintf(buff,"Main       0x%02X",pOdrive->GetOdriveError().OdriveError);
-                pDisplay->GetRealDisplay()->print(buff);
-
-                pDisplay->GetRealDisplay()->setCursor(1, 10);
-                sprintf(buff,"Ctrlr      0x%08X",pOdrive->GetOdriveError().OdriveControllerError);
-                pDisplay->GetRealDisplay()->print(buff);
-
-                pDisplay->GetRealDisplay()->setCursor(1, 20);
-                sprintf(buff,"Encoder    0x%08X",pOdrive->GetOdriveError().OdriveEncoderError);
-                pDisplay->GetRealDisplay()->print(buff);    
-
-                pDisplay->GetRealDisplay()->setCursor(1, 30);
-                sprintf(buff,"SensLesEst 0x%08X",pOdrive->GetOdriveError().OdriveSensorlessEstimatorError);
-                pDisplay->GetRealDisplay()->print(buff);   
-
-                pDisplay->GetRealDisplay()->setCursor(1, 40);
-                sprintf(buff,"Axis0      0x%08X",pOdrive->GetOdriveError().OdriveAxix0Error);
-                pDisplay->GetRealDisplay()->print(buff);   
-
-                pDisplay->GetRealDisplay()->setCursor(1, 50);
-                sprintf(buff,"Axis1      0x%08X",pOdrive->GetOdriveError().OdriveAxix1Error);
-                pDisplay->GetRealDisplay()->print(buff);        
-
+                for(int i = 0 ; i<6;i++){
+                    pDisplay->GetRealDisplay()->setCursor(1, 1+(i*10));
+                    pDisplay->GetRealDisplay()->print(&(sErrorArr[i+cursor][0]));
+                }
                 pDisplay->GetRealDisplay()->display();
         }
     

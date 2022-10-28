@@ -29,6 +29,7 @@ int Buttons::Init(){
   pinMode(PIN_BUTTON_RIGHT,INPUT_PULLUP);
   pinMode(PIN_BUTTON_LEFT,INPUT_PULLUP);
   pinMode(PIN_BUTTON_MID,INPUT_PULLUP);
+  ON_OFF = true;
   return 0;
 }
 
@@ -108,6 +109,12 @@ void Buttons::ReadCyclic(){
     if(BT_PWR_CNT == LONG_PRESS_TIME){
       Serial.print("Button Event := eButtonPWRPressLong");
       addEvent(eButtonPWRPressLong);
+      if(ON_OFF){
+        ON_OFF = false;
+        digitalWrite(PIN_HOLD_PWR,false);
+      }
+      
+
     }
   }else{
     if((BT_PWR_CNT > 1) && (BT_PWR_CNT< LONG_PRESS_TIME)){

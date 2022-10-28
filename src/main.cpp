@@ -6,6 +6,7 @@
 #include "ConfigData/ConfigData.h"
 #include "Trottle/Trottle.h"
 #include "OnboardLedRGB/OnBoardLed.h"
+#include "Config/PinConfig.h"
 
 
 Buttons cButtons;
@@ -24,7 +25,9 @@ void setup() {
   //For Debbuging
   Serial.begin(9600);
   //while (!Serial); //Whait while Serial is connected in VSC
-
+  delay(1000);
+  digitalWrite(PIN_HOLD_PWR,true);
+  delay(1000);
 
 
 
