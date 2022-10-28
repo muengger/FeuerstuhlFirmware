@@ -33,6 +33,11 @@
         pTrottle = _pTrottle;
      
     }   
+    ConfigZeile::ConfigZeile(String _Desc,Odrive * _pOdrive){
+        Type= eODrive;
+        Desc = _Desc; 
+        pOdrive = _pOdrive;
+    }
     ConfigZeile::~ConfigZeile(){
 
     }
@@ -239,6 +244,24 @@
                     init = true;
                     return 1;
                 }
+        }else if (Type == eODrive){
+                if(init){
+                    init = false;
+                    pOdrive->ActualizeOdriveError();
+                }
+                if(Event == Buttons::eButtonEvent::eButtonMidPressShort){
+                    pOdrive->ActualizeOdriveError();
+                } 
+                pDisplay->GetRealDisplay()->clearDisplay();
+                pDisplay->GetRealDisplay()->setTextSize(1);
+                pDisplay->GetRealDisplay()->setTextColor(SSD1306_WHITE); 
+                pDisplay->GetRealDisplay()->cp437(true); 
+                pDisplay->GetRealDisplay()->setCursor(1, 1);
+                pDisplay->GetRealDisplay()->print(Desc);
+                pDisplay->GetRealDisplay()->setCursor(1, 15);
+                pDisplay->GetRealDisplay()->print("Odrive Error ");
+
+                pDisplay->GetRealDisplay()->display();
         }
     
         return 0;
