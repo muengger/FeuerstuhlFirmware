@@ -24,15 +24,18 @@ class Odrive{
     struct sOdriveError{
         uint8_t OdriveError; 
         uint32_t OdriveAxix0Error;
-        uint32_t OdriveAxix1Error;
-        uint32_t OdriveAxix0MotorError;
-        uint32_t OdriveAxix1MotorError;
-        uint32_t OdriveControllerError;
-        uint32_t OdriveSensorlessEstimatorError;
-        uint32_t OdriveEncoderError;
+        uint32_t OdriveAxis1Error;
+        uint32_t OdriveAxis0MotorError;
+        uint32_t OdriveAxis1MotorError;
+        uint32_t OdriveAxis0ControllerError;
+        uint32_t OdriveAxis1ControllerError;
+        uint32_t OdriveAxis0SensorlessEstimatorError;
+        uint32_t OdriveAxis1SensorlessEstimatorError;
+        uint32_t OdriveAxis0EncoderError;
+        uint32_t OdriveAxis1EncoderError;
     };
     void ActualizeOdriveError();
-    sOdriveError GetOdriveError();
+    sOdriveError GetOdriveError(bool * BusyWithReading);
     
     private:
     //Odrive Configuration

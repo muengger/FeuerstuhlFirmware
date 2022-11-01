@@ -137,6 +137,8 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveError = res.toInt();
+        }else{
+            OdriveError.OdriveError = 0xFF;
         }
         state = 11;
     break;
@@ -151,6 +153,8 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxix0Error = res.toInt();
+        }else{
+            OdriveError.OdriveAxix0Error = 0xFFFFFFFF;
         }
         state = 13;
     break;
@@ -164,7 +168,9 @@ int Odrive::CyclicUpdate(){
     case 14:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError.OdriveAxix1Error = res.toInt();
+            OdriveError.OdriveAxis1Error = res.toInt();
+        }else{
+            OdriveError.OdriveAxis1Error = 0xFFFFFFFF;
         }
         state = 15;
     break;
@@ -178,7 +184,9 @@ int Odrive::CyclicUpdate(){
     case 16:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError.OdriveAxix0MotorError = res.toInt();
+            OdriveError.OdriveAxis0MotorError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis0MotorError = 0xFFFFFFFF;
         }
         state = 17;
     break;
@@ -192,7 +200,9 @@ int Odrive::CyclicUpdate(){
     case 18:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError.OdriveAxix1MotorError = res.toInt();
+            OdriveError.OdriveAxis1MotorError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis1MotorError = 0xFFFFFFFF;
         }
         state = 19;
     break;
@@ -200,41 +210,96 @@ int Odrive::CyclicUpdate(){
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
-        ODriveSerial->write("r controller.error\n");
+        ODriveSerial->write("r axis0.controller.error\n");
         state = 20;
     break;
     case 20:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError.OdriveControllerError = res.toInt();
+            OdriveError.OdriveAxis0ControllerError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis0ControllerError = 0xFFFFFFFF;
         }
         state = 21;
     break;
-    case 21: //Read SensorlessEstimator error
+    case 21: //Read Controller error
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
-        ODriveSerial->write("r SensorlessEstimator.error\n");
+        ODriveSerial->write("r axis1.controller.error\n");
         state = 22;
     break;
     case 22:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError.OdriveSensorlessEstimatorError = res.toInt();
+            OdriveError.OdriveAxis1ControllerError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis1ControllerError = 0xFFFFFFFF;
         }
         state = 23;
     break;
-    case 23: //Read encoder error
+    case 23: //Read SensorlessEstimator error
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
-        ODriveSerial->write("r encoder.error\n");
+        ODriveSerial->write("r axis0.SensorlessEstimator.error\n");
         state = 24;
     break;
     case 24:
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            OdriveError.OdriveEncoderError = res.toInt();
+            OdriveError.OdriveAxis0SensorlessEstimatorError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis0SensorlessEstimatorError = 0xFFFFFFFF;
+        }
+        state = 25;
+    break;
+    case 25: //Read SensorlessEstimator error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis1.SensorlessEstimator.error\n");
+        state = 26;
+    break;
+    case 26:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveAxis1SensorlessEstimatorError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis1SensorlessEstimatorError = 0xFFFFFFFF;
+        }
+        state = 27;
+    break;
+    case 27: //Read encoder error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis0.encoder.error\n");
+        state = 28;
+    break;
+    case 28:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveAxis0EncoderError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis0EncoderError = 0xFFFFFFFF;
+        }
+        ReadError = false;
+        state = 29;
+    break;
+    case 29: //Read encoder error
+        while(ODriveSerial->available()){
+            ODriveSerial->read();
+        }
+        ODriveSerial->write("r axis1.encoder.error\n");
+        state = 30;
+    break;
+    case 30:
+        res = ODriveSerial->readString();
+        if(res.length() > 2){
+            OdriveError.OdriveAxis1EncoderError = res.toInt();
+        }else{
+            OdriveError.OdriveAxis1EncoderError = 0xFFFFFFFF;
         }
         ReadError = false;
         state = 0;
@@ -303,11 +368,13 @@ void Odrive::ActualizeOdriveError(){
         ReadError = true;
     }
 }
-Odrive::sOdriveError Odrive::GetOdriveError(){
+Odrive::sOdriveError Odrive::GetOdriveError(bool * BusyWithReading){
     if(ReadError == true){//While reading give 0 
         sOdriveError Error = {0};
+        *BusyWithReading = true;
         return Error;
     }else{
+        *BusyWithReading = false;
         return OdriveError;
     }
 }

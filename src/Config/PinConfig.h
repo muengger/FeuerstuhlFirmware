@@ -13,7 +13,7 @@
 #define PIN_BUTTON_MID 12 //ehem 22 -> wired manually
 #define PIN_BUTTON_ON_OFF A0 // -> wired manually
 #define PIN_HOLD_PWR 13 // -> wired manually
-#define PIN_I2C_TCK = 22 //ehem 3 -> wired manually
-#define PIN_I2C_SDA = 21 // ehem 21 -> wired manually
+#define PIN_I2C_TCK  22 //ehem 3 -> wired manually
+#define PIN_I2C_SDA  21 // ehem 21 -> wired manually
 
 #endif //PINCONFIG_H

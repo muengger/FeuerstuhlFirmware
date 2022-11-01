@@ -33,6 +33,7 @@ private:
     int BT_Right_CNT;
     int BT_Left_CNT;
     int BT_PWR_CNT;
+    bool ON_OFF;
     std::vector <enum eButtonEvent> vEvent;
 
     
