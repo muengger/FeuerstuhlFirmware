@@ -16,6 +16,7 @@ class Odrive{
     int Start();
     int Stop();
     float GetBusVoltage();
+    int GetBattCharge();
     float GetRPS();
     void SetTorque(float torque);
     void SetMaxSpeed(float Speed);
@@ -48,6 +49,7 @@ class Odrive{
     sOdriveError OdriveError;
 
     ConfigData * pConfigData;
+    
 };
 
 #endif //ODRIVE_H

@@ -51,7 +51,11 @@ void Display::ComputeCyclic(){
     pScreenArr[ActualShownScreen]->CyclicProcess();
 }
 float Display::GetVoltage(){
+
     return pOdrive->GetBusVoltage();
+}
+int Display::GetBattCharge(){
+    return pOdrive->GetBattCharge();
 }
 float Display::GetSpeed(){
     return pConfigData->RPSToSpeed(pOdrive->GetRPS());

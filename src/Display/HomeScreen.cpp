@@ -27,7 +27,8 @@
                 pDisplay->SetRunState(StateMaschine::eStates::eStop);
             }
         }
-        float Voltage = pDisplay->GetVoltage();
+        //float Voltage = pDisplay->GetVoltage();
+        int BattChage = pDisplay->GetBattCharge();
         float Speed = pDisplay->GetSpeed();
         
         if(MaxSpeed < Speed){
@@ -41,7 +42,7 @@
         DrawSpeed(Speed);
         DrawMaxSpeed(MaxSpeed);
         DrawTrottle(pDisplay->GetTrottle()->GetTrottleVal());
-        DrawBatt(Voltage);
+        DrawBatt(BattChage);
         DrawState((int)RunState);
         DrawSpeedState(SpeedState);
         test= test +0.1;

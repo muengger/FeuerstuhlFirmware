@@ -27,6 +27,7 @@ public:
     Adafruit_SSD1306 * GetRealDisplay();
     Trottle * GetTrottle();
     float GetVoltage();
+    int GetBattCharge();
     float GetSpeed();
     StateMaschine::eStates GetRunState();
     void SetRunState(StateMaschine::eStates NewState);
