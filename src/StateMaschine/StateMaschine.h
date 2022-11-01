@@ -16,13 +16,16 @@ class StateMaschine{
     int SetRunState(eStates NewState);
     ConfigData::eSpeedState GetSpeedState();
     void SetSpeedState(ConfigData::eSpeedState _SpeedState);
+    bool GetLoBatt();
     private:
+    void CheckVoltage();
     eStates State;
     ConfigData::eSpeedState SpeedState;
     float Torque;
     Odrive * pOdrive;
     Trottle * pTrottle;
     ConfigData * pConfigData;
+    int loBatt;
 };
 
 #endif //STATEMASCHINE_H

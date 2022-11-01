@@ -27,7 +27,7 @@
                 pDisplay->SetRunState(StateMaschine::eStates::eStop);
             }
         }
-        //float Voltage = pDisplay->GetVoltage();
+        bool loBatt =  pDisplay->GetLoBatt();
         int BattChage = pDisplay->GetBattCharge();
         float Speed = pDisplay->GetSpeed();
         
@@ -42,7 +42,7 @@
         DrawSpeed(Speed);
         DrawMaxSpeed(MaxSpeed);
         DrawTrottle(pDisplay->GetTrottle()->GetTrottleVal());
-        DrawBatt(BattChage);
+        DrawBatt(BattChage,loBatt);
         DrawState((int)RunState);
         DrawSpeedState(SpeedState);
         test= test +0.1;
@@ -91,13 +91,25 @@
         return 0;
     }  
 
-    int HomeScreen::DrawBatt(int  percent){
-        
+    int HomeScreen::DrawBatt(int  percent,bool LoBatt){
+        static int counter = 0;
         float max = 13;
         float min = 41;
         int Y = ((min - max)/100) * (100 - percent) + max;
         int h = min - Y;
-        pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
+        if(LoBatt){
+            counter++;
+            if(counter > 20){
+                pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
+                pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,34,4,SSD1306_WHITE);
+            }else if (counter > 40){
+                counter = 0;
+            }
+        }else{
+            counter = 0;
+            pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
+            pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,34,4,SSD1306_WHITE);
+        }
         return 0;
     } 
 
@@ -176,7 +188,8 @@
 
         pDisplay->GetRealDisplay()->drawRoundRect(70,10,10,34,4,SSD1306_WHITE);
 
-        pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,34,4,SSD1306_WHITE);
+        
+
         pDisplay->GetRealDisplay()->fillRect(17,55,32,10,SSD1306_WHITE);
         pDisplay->GetRealDisplay()->fillRect(60,45,68,20,SSD1306_WHITE);
 

@@ -46,6 +46,7 @@ void loop() {
   static unsigned long oldmilisecond20Hz = 0;
   static unsigned long oldmilisecond1Hz = 0;
   unsigned long newmillisecond = millis();
+
   if((oldmilisecond100Hz+10) < newmillisecond){ //100Hz
     oldmilisecond100Hz = newmillisecond;
     cButtons.ReadCyclic();
@@ -60,16 +61,10 @@ void loop() {
   }
   if((oldmilisecond10Hz+100) < newmillisecond){ //10Hz
     oldmilisecond10Hz = newmillisecond;
-    
-
     cDisplay.ComputeCyclic();
   } 
-
-
-
   if((oldmilisecond1Hz+1000) < newmillisecond){ //1Hz
     oldmilisecond1Hz = newmillisecond;
-
     cOnBoardLed.ToggleHeartBeat();
   }  
   

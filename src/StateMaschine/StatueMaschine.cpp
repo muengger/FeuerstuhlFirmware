@@ -7,12 +7,15 @@ StateMaschine::StateMaschine(Odrive * _pOdrive,Trottle * _pTrottle,ConfigData * 
     pTrottle = _pTrottle;
     pConfigData = _pConfigData;
     SpeedState = pConfigData->GetDriveParam()->DriveState;
+    loBatt = 0;
 }
 
 StateMaschine::~StateMaschine(){
 
 }
 void StateMaschine::CyclicRun(){
+    CheckVoltage();
+
     switch (State)
     {
     case eStop:
@@ -23,6 +26,11 @@ void StateMaschine::CyclicRun(){
         float MaxTorque = pConfigData->GetDriveParam()->MaxTorquePerState[pConfigData->GetDriveParam()->DriveState];
         int Trottle = pTrottle->GetTrottleVal();
         float torque = (MaxTorque/1000) * ((float)Trottle);
+        if(loBatt){
+            if(torque > 0.5){
+                torque = 0.5;
+            }
+        }
         pOdrive->SetTorque(torque);
     }
     break;
@@ -58,4 +66,24 @@ ConfigData::eSpeedState StateMaschine::GetSpeedState(){
 void StateMaschine::SetSpeedState(ConfigData::eSpeedState _SpeedState){
     SpeedState =  _SpeedState;
     pOdrive->SetMaxSpeed(pConfigData->GetDriveParam()->MaxSpeedPerState[SpeedState]);
+}
+
+void StateMaschine::CheckVoltage(){
+     static int counter = 0;
+    
+    if(pOdrive->GetBusVoltage() < 35){
+        counter++;
+    }else{
+        counter--;
+    }
+    if(counter < 0){
+        counter = 0;
+        loBatt = 0;
+    }else if (counter > 300){
+        counter = 100;
+        loBatt = 1;
+    }
+}
+bool StateMaschine::GetLoBatt(){
+    return loBatt;
 }

@@ -12,7 +12,7 @@ class HomeScreen : Screen{
     int DrawMaxSpeed(float speed);
     int DrawStatic();
     int DrawTrottle(int  trottle);
-    int DrawBatt(int  percent);
+    int DrawBatt(int  percent,bool LoBatt);
     int DrawState(int State);
     int DrawSpeedState(ConfigData::eSpeedState SpeedState);
 

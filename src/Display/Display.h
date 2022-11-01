@@ -31,7 +31,7 @@ public:
     float GetSpeed();
     StateMaschine::eStates GetRunState();
     void SetRunState(StateMaschine::eStates NewState);
-    
+    bool GetLoBatt();
     void SetScreenToMenue();
     void SetScreenToHome();
 

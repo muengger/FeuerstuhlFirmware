@@ -63,6 +63,9 @@ float Display::GetSpeed(){
 StateMaschine::eStates Display::GetRunState(){
     return pStateMaschine->GetRunState();
 }
+bool Display::GetLoBatt(){
+    return pStateMaschine->GetLoBatt();
+}
 void Display::SetRunState(StateMaschine::eStates NewState){
     pStateMaschine->SetRunState(NewState);
 }

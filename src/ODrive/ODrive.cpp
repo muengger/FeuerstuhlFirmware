@@ -137,6 +137,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveError = 0xFF;
         }
@@ -153,6 +154,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxix0Error = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxix0Error = 0xFFFFFFFF;
         }
@@ -169,6 +171,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis1Error = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis1Error = 0xFFFFFFFF;
         }
@@ -185,6 +188,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis0MotorError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis0MotorError = 0xFFFFFFFF;
         }
@@ -201,6 +205,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis1MotorError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis1MotorError = 0xFFFFFFFF;
         }
@@ -217,6 +222,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis0ControllerError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis0ControllerError = 0xFFFFFFFF;
         }
@@ -233,6 +239,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis1ControllerError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis1ControllerError = 0xFFFFFFFF;
         }
@@ -242,13 +249,14 @@ int Odrive::CyclicUpdate(){
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
-        ODriveSerial->write("r axis0.SensorlessEstimator.error\n");
+        ODriveSerial->write("r axis0.sensorless_estimator.error\n");
         state = 24;
     break;
     case 24:
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis0SensorlessEstimatorError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis0SensorlessEstimatorError = 0xFFFFFFFF;
         }
@@ -258,13 +266,14 @@ int Odrive::CyclicUpdate(){
         while(ODriveSerial->available()){
             ODriveSerial->read();
         }
-        ODriveSerial->write("r axis1.SensorlessEstimator.error\n");
+        ODriveSerial->write("r axis1.sensorless_estimator.error\n");
         state = 26;
     break;
     case 26:
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis1SensorlessEstimatorError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis1SensorlessEstimatorError = 0xFFFFFFFF;
         }
@@ -281,6 +290,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis0EncoderError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis0EncoderError = 0xFFFFFFFF;
         }
@@ -298,6 +308,7 @@ int Odrive::CyclicUpdate(){
         res = ODriveSerial->readString();
         if(res.length() > 2){
             OdriveError.OdriveAxis1EncoderError = res.toInt();
+            Serial.println(res);
         }else{
             OdriveError.OdriveAxis1EncoderError = 0xFFFFFFFF;
         }
@@ -342,6 +353,7 @@ int Odrive::GetBattCharge(){
     }else if(BusVoltage < 4.2){
         return (BusVoltage -3.9)* 133 + 60;
     }
+    return 0;
 }
 float Odrive::GetRPS(){
     return (RPS_L + RPS_R)/2;
