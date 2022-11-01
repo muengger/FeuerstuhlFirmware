@@ -20,7 +20,7 @@ public:
 
     int Init();
     //Its important to call this func with 10Hz
-    void ReadCyclic();
+    bool ReadCyclic();
     //if you get an event its deleted 
     enum eButtonEvent GetEvent();
 private:

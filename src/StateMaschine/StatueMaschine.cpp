@@ -1,4 +1,5 @@
 #include "StateMaschine.h"
+#include "Config/PinConfig.h"
 
 StateMaschine::StateMaschine(Odrive * _pOdrive,Trottle * _pTrottle,ConfigData * _pConfigData){
     State = eStop;
@@ -13,8 +14,10 @@ StateMaschine::StateMaschine(Odrive * _pOdrive,Trottle * _pTrottle,ConfigData * 
 StateMaschine::~StateMaschine(){
 
 }
-void StateMaschine::CyclicRun(){
+void StateMaschine::CyclicRun(bool ButtonPressed){
     CheckVoltage();
+    int Trottle = pTrottle->GetTrottleVal();
+    SwitchOFFTimer(Trottle,ButtonPressed);
 
     switch (State)
     {
@@ -24,7 +27,7 @@ void StateMaschine::CyclicRun(){
     case eRun:
     {
         float MaxTorque = pConfigData->GetDriveParam()->MaxTorquePerState[pConfigData->GetDriveParam()->DriveState];
-        int Trottle = pTrottle->GetTrottleVal();
+        
         float torque = (MaxTorque/1000) * ((float)Trottle);
         if(loBatt){
             if(torque > 0.5){
@@ -86,4 +89,16 @@ void StateMaschine::CheckVoltage(){
 }
 bool StateMaschine::GetLoBatt(){
     return loBatt;
+}
+
+void StateMaschine::SwitchOFFTimer(int Trottle,bool buttonpressed){
+    static int counter = 0;
+    if(counter > 600){
+        digitalWrite(PIN_HOLD_PWR,false);
+        while(1);
+    }
+    if((Trottle != 0)||(buttonpressed)){
+        counter = 0;
+    }
+    counter++;
 }

@@ -22,9 +22,11 @@ Display cDisplay(&cOdrive,&cButtons,&cTrottle,&cConfigData,&cStateMaschine);
 
 
 void setup() {
+  cButtons.Init();
   //For Debbuging
   Serial.begin(9600);
   //while (!Serial); //Whait while Serial is connected in VSC
+  
   delay(1000);
   digitalWrite(PIN_HOLD_PWR,true);
   delay(1000);
@@ -32,11 +34,11 @@ void setup() {
 
 
   cOdrive.Init();
-  cButtons.Init();
+  
   cDisplay.Init();
   cTrottle.Init();
-  cOnBoardLed.SetColor(0);
-  cOnBoardLed.SetBrightness(10);
+  //cOnBoardLed.SetColor(0);
+  //cOnBoardLed.SetBrightness(10);
 
 }
 
@@ -46,17 +48,22 @@ void loop() {
   static unsigned long oldmilisecond20Hz = 0;
   static unsigned long oldmilisecond1Hz = 0;
   unsigned long newmillisecond = millis();
+  static bool buttonPressed;
 
   if((oldmilisecond100Hz+10) < newmillisecond){ //100Hz
     oldmilisecond100Hz = newmillisecond;
-    cButtons.ReadCyclic();
+    if(cButtons.ReadCyclic() == true){
+      buttonPressed = true;
+    }
+    
     cOdrive.CyclicUpdate();
 
   } 
   if((oldmilisecond20Hz+50) < newmillisecond){ //20Hz
     oldmilisecond20Hz = newmillisecond;
     cTrottle.Update();
-    cStateMaschine.CyclicRun(); 
+    cStateMaschine.CyclicRun(buttonPressed); 
+    buttonPressed = false;
     
   }
   if((oldmilisecond10Hz+100) < newmillisecond){ //10Hz
@@ -65,7 +72,7 @@ void loop() {
   } 
   if((oldmilisecond1Hz+1000) < newmillisecond){ //1Hz
     oldmilisecond1Hz = newmillisecond;
-    cOnBoardLed.ToggleHeartBeat();
+    //cOnBoardLed.ToggleHeartBeat();
   }  
   
 }

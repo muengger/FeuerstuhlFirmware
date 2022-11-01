@@ -33,17 +33,20 @@ int Buttons::Init(){
   return 0;
 }
 
-void Buttons::ReadCyclic(){
+bool Buttons::ReadCyclic(){
+  bool buttonpressed = false;
   if(digitalRead(PIN_BUTTON_UP) == 0){
     BT_Up_CNT++;
     if(BT_Up_CNT == LONG_PRESS_TIME){
       //Serial.print("Button Event := eButtonUpPressLong");
       addEvent(eButtonUpPressLong);
+      buttonpressed = true;
     }
   }else{
     if((BT_Up_CNT > 1) && (BT_Up_CNT< LONG_PRESS_TIME)){
       //Serial.print("Button Event := eButtonUpPressShort");
       addEvent(eButtonUpPressShort);
+      buttonpressed = true;
     }
     BT_Up_CNT = 0;
   }
@@ -53,11 +56,13 @@ void Buttons::ReadCyclic(){
     if(BT_Down_CNT == LONG_PRESS_TIME){
       //Serial.print("Button Event := eButtonDownPressLong");
       addEvent(eButtonDownPressLong);
+      buttonpressed = true;
     }
   }else{
     if((BT_Down_CNT > 1) && (BT_Down_CNT< LONG_PRESS_TIME)){
       //Serial.print("Button Event := eButtonDownPressShort");
       addEvent(eButtonDownPressShort);
+      buttonpressed = true;
     }
     BT_Down_CNT = 0;
   }
@@ -67,11 +72,13 @@ void Buttons::ReadCyclic(){
     if(BT_Mid_CNT == LONG_PRESS_TIME){
       //Serial.print("Button Event := eButtonMidPressLong");
       addEvent(eButtonMidPressLong);
+      buttonpressed = true;
     }
   }else{
     if((BT_Mid_CNT > 1) && (BT_Mid_CNT< LONG_PRESS_TIME)){
       //Serial.print("Button Event := eButtonMidPressShort");
       addEvent(eButtonMidPressShort);
+      buttonpressed = true;
     }
     BT_Mid_CNT = 0;
   }
@@ -81,11 +88,13 @@ void Buttons::ReadCyclic(){
     if(BT_Right_CNT == LONG_PRESS_TIME){
       //Serial.print("Button Event := eButtonRightPressLong");
       addEvent(eButtonRightPressLong);
+      buttonpressed = true;
     }
   }else{
     if((BT_Right_CNT > 1) && (BT_Right_CNT< LONG_PRESS_TIME)){
       //Serial.print("Button Event := eButtonRightPressShort");
       addEvent(eButtonRightPressShort);
+      buttonpressed = true;
     }
     BT_Right_CNT = 0;
   }
@@ -95,11 +104,13 @@ void Buttons::ReadCyclic(){
     if(BT_Left_CNT == LONG_PRESS_TIME){
       //Serial.print("Button Event := eButtonLeftPressLong");
       addEvent(eButtonLeftPressLong);
+      buttonpressed = true;
     }
   }else{
     if((BT_Left_CNT > 1) && (BT_Left_CNT< LONG_PRESS_TIME)){
       //Serial.print("Button Event := eButtonLeftPressShort");
       addEvent(eButtonLeftPressShort);
+      buttonpressed = true;
     }
     BT_Left_CNT = 0;
   }
@@ -109,9 +120,11 @@ void Buttons::ReadCyclic(){
     if(BT_PWR_CNT == LONG_PRESS_TIME){
       Serial.print("Button Event := eButtonPWRPressLong");
       addEvent(eButtonPWRPressLong);
+      buttonpressed = true;
       if(ON_OFF){
         ON_OFF = false;
         digitalWrite(PIN_HOLD_PWR,false);
+        while(1);
       }
       
 
@@ -120,9 +133,11 @@ void Buttons::ReadCyclic(){
     if((BT_PWR_CNT > 1) && (BT_PWR_CNT< LONG_PRESS_TIME)){
       Serial.print("Button Event := eButtonPWRPressShort");
       addEvent(eButtonPWRPressShort);
+      buttonpressed = true;
     }
     BT_PWR_CNT = 0;
   }
+  return buttonpressed;
 }
 //if you get an event its deleted 
 Buttons::eButtonEvent Buttons::GetEvent(){

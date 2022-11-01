@@ -11,7 +11,7 @@ class StateMaschine{
     enum eStates{eStop,eRun,eError};
     StateMaschine(Odrive * _pOdrive,Trottle * _pTrottle,ConfigData * _pConfigData);
     ~StateMaschine();
-    void CyclicRun();
+    void CyclicRun(bool ButtonPressed);
     eStates GetRunState();
     int SetRunState(eStates NewState);
     ConfigData::eSpeedState GetSpeedState();
@@ -19,6 +19,7 @@ class StateMaschine{
     bool GetLoBatt();
     private:
     void CheckVoltage();
+    void SwitchOFFTimer(int Trottle,bool buttonpressed);
     eStates State;
     ConfigData::eSpeedState SpeedState;
     float Torque;
