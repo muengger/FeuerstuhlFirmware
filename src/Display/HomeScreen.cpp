@@ -99,10 +99,10 @@
         int h = min - Y;
         if(LoBatt){
             counter++;
-            if(counter > 20){
+            if(counter < 5){
                 pDisplay->GetRealDisplay()->fillRoundRect(87,Y,6,h,2,SSD1306_WHITE);
                 pDisplay->GetRealDisplay()->drawRoundRect(85,10,10,34,4,SSD1306_WHITE);
-            }else if (counter > 40){
+            }else if(counter > 10){
                 counter = 0;
             }
         }else{

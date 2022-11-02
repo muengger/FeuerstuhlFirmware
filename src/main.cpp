@@ -22,23 +22,22 @@ Display cDisplay(&cOdrive,&cButtons,&cTrottle,&cConfigData,&cStateMaschine);
 
 
 void setup() {
-  cButtons.Init();
+  
   //For Debbuging
-  Serial.begin(9600);
+  
   //while (!Serial); //Whait while Serial is connected in VSC
   
   delay(1000);
+  cButtons.Init();
   digitalWrite(PIN_HOLD_PWR,true);
   delay(1000);
 
-
-
+  Serial.begin(9600);
   cOdrive.Init();
-  
   cDisplay.Init();
   cTrottle.Init();
-  //cOnBoardLed.SetColor(0);
-  //cOnBoardLed.SetBrightness(10);
+  cOnBoardLed.SetColor(0);
+  cOnBoardLed.SetBrightness(10);
 
 }
 
@@ -72,7 +71,7 @@ void loop() {
   } 
   if((oldmilisecond1Hz+1000) < newmillisecond){ //1Hz
     oldmilisecond1Hz = newmillisecond;
-    //cOnBoardLed.ToggleHeartBeat();
+    cOnBoardLed.ToggleHeartBeat();
   }  
   
 }

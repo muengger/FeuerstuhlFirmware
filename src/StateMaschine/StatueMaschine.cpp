@@ -30,8 +30,8 @@ void StateMaschine::CyclicRun(bool ButtonPressed){
         
         float torque = (MaxTorque/1000) * ((float)Trottle);
         if(loBatt){
-            if(torque > 0.5){
-                torque = 0.5;
+            if(torque > 0){
+                torque = 0;
             }
         }
         pOdrive->SetTorque(torque);
@@ -72,19 +72,34 @@ void StateMaschine::SetSpeedState(ConfigData::eSpeedState _SpeedState){
 }
 
 void StateMaschine::CheckVoltage(){
-     static int counter = 0;
+    static int counterLo = 0;
+    static int counterEmpty = 0;
     
     if(pOdrive->GetBusVoltage() < 35){
-        counter++;
+        counterLo++;
     }else{
-        counter--;
+        counterLo--;
     }
-    if(counter < 0){
-        counter = 0;
+    if(pOdrive->GetBusVoltage() < 33){
+        counterEmpty++;
+    }else{
+        counterEmpty--;
+    }
+
+    if(counterLo < 0){
+        counterLo = 0;
         loBatt = 0;
-    }else if (counter > 300){
-        counter = 100;
+    }else if (counterLo > 100){
+        counterLo = 100;
         loBatt = 1;
+    }
+
+    if(counterEmpty < 0){
+        counterEmpty = 0;
+
+    }else if (counterEmpty > 200){
+        digitalWrite(PIN_HOLD_PWR,false);
+        while(1);
     }
 }
 bool StateMaschine::GetLoBatt(){
@@ -93,7 +108,7 @@ bool StateMaschine::GetLoBatt(){
 
 void StateMaschine::SwitchOFFTimer(int Trottle,bool buttonpressed){
     static int counter = 0;
-    if(counter > 600){
+    if(counter > 6000){
         digitalWrite(PIN_HOLD_PWR,false);
         while(1);
     }
