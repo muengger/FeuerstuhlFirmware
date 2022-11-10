@@ -157,6 +157,7 @@
     }
     int HomeScreen::DrawStatic(){
         pDisplay->GetRealDisplay()->drawCircle(32,32,30,SSD1306_WHITE);
+        pDisplay->GetRealDisplay()->drawCircle(32,32,31,SSD1306_WHITE);
         pDisplay->GetRealDisplay()->fillCircle(32,32,3,SSD1306_WHITE);
         
         pDisplay->GetRealDisplay()->drawLine(2,32,4,32,SSD1306_WHITE);
