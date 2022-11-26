@@ -7,6 +7,7 @@
 Odrive::Odrive(ConfigData * _pConfigData){
     Run_Stop = 0;
     pConfigData = _pConfigData;
+    BusVoltage = 0;
 }
 Odrive::~Odrive(){
 
@@ -40,7 +41,7 @@ int Odrive::CyclicUpdate(){
     case 1://Read Bus Voltage Answer
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            BusVoltage = res.toFloat();
+            BusVoltage += ((res.toFloat() - BusVoltage) / 100);
         }
         state = 2;
     break;
@@ -342,16 +343,17 @@ float Odrive::GetBusVoltage(){
     return BusVoltage;
 }
 int Odrive::GetBattCharge(){
-    if(BusVoltage < 3.2){
+    float CellVoltage = BusVoltage/10;
+    if(CellVoltage < 3.2){
         return 0;
-    }else if(BusVoltage > 4.2){
+    }else if(CellVoltage > 4.2){
         return 100;
-    }else if(BusVoltage < 3.7){
-        return (BusVoltage -3.2)* 20;
-    }else if(BusVoltage < 3.9){
-        return (BusVoltage -3.7)* 250 + 10;
-    }else if(BusVoltage < 4.2){
-        return (BusVoltage -3.9)* 133 + 60;
+    }else if(CellVoltage < 3.7){
+        return (CellVoltage -3.2)* 20;
+    }else if(CellVoltage < 3.9){
+        return (CellVoltage -3.7)* 250 + 10;
+    }else if(CellVoltage < 4.2){
+        return (CellVoltage -3.9)* 133 + 60;
     }
     return 0;
 }
