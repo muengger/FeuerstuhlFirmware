@@ -27,6 +27,7 @@ int Odrive::Init(){
 int Odrive::CyclicUpdate(){
     static int state = 0;
     static int old_run_Stop = 0;
+    static bool firstRun = true;
     String res;
 
     switch (state)
@@ -41,7 +42,12 @@ int Odrive::CyclicUpdate(){
     case 1://Read Bus Voltage Answer
         res = ODriveSerial->readString();
         if(res.length() > 2){
-            BusVoltage += ((res.toFloat() - BusVoltage) / 100);
+            float temp = res.toFloat();
+            if(firstRun){
+                BusVoltage = temp;
+            }else{               
+                BusVoltage = BusVoltage + ((temp - BusVoltage) / (float)10);
+            }
         }
         state = 2;
     break;
@@ -131,7 +137,7 @@ int Odrive::CyclicUpdate(){
             ODriveSerial->write("r error\n");
             state = 10;
         }else{
-            state = 0;
+            state = 250;
         }
     break;
     case 10:
@@ -314,7 +320,7 @@ int Odrive::CyclicUpdate(){
             OdriveError.OdriveAxis1EncoderError = 0xFFFFFFFF;
         }
         ReadError = false;
-        state = 0;
+        state = 250;
     break;
     case 100:
         Serial.println("BusVoltage");
@@ -323,11 +329,13 @@ int Odrive::CyclicUpdate(){
         Serial.println(RPS_L);
         Serial.println("RPM_R");
         Serial.println(RPS_R);
-        state = 0;
+        state = 250;
     break;
-    }
-    
-    
+    case 250:
+        state = 0;
+        firstRun = false;
+    break;
+    }    
     return 0;
 }
 int Odrive::Start(){
@@ -342,6 +350,7 @@ int Odrive::Stop(){
 float Odrive::GetBusVoltage(){
     return BusVoltage;
 }
+//out put 0-100%
 int Odrive::GetBattCharge(){
     float CellVoltage = BusVoltage/10;
     if(CellVoltage < 3.2){
@@ -349,7 +358,7 @@ int Odrive::GetBattCharge(){
     }else if(CellVoltage > 4.2){
         return 100;
     }else if(CellVoltage < 3.7){
-        return (CellVoltage -3.2)* 20;
+        return (CellVoltage -3.2)* 20;  //10%
     }else if(CellVoltage < 3.9){
         return (CellVoltage -3.7)* 250 + 10;
     }else if(CellVoltage < 4.2){
